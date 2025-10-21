@@ -1,0 +1,205 @@
+/* Import the default calendar styles */
+@import "react-calendar/dist/Calendar.css";
+
+.my-appointments-page {
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 25px;
+}
+
+.appointments-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* --- Calendar Styling --- */
+.calendar-container {
+  flex: 2; /* Takes up more space */
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Customize react-calendar */
+.react-calendar {
+  width: 100%;
+  border: none;
+  font-family: inherit;
+}
+
+.react-calendar__navigation button {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  text-align: center;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none; /* Remove underline */
+  padding-bottom: 0.5em; /* Add space below weekdays */
+}
+
+.react-calendar__tile {
+  padding: 15px 5px; /* Adjust tile padding */
+  position: relative; /* Needed for positioning appointment info */
+  height: 90px; /* Make tiles taller */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center content horizontally */
+  justify-content: flex-start; /* Align content to the top */
+}
+
+.react-calendar__tile--now {
+  background: #e6f7f6; /* Highlight today's date */
+  border-radius: 8px;
+}
+.react-calendar__tile--active {
+  background: #00a79d; /* Active selection color */
+  color: white;
+  border-radius: 8px;
+}
+
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+  background-color: #f1f3f5;
+  border-radius: 8px;
+}
+
+/* Style for appointment indicator */
+.appointment-indicator {
+  background-color: #e6f7f6;
+  color: #00796b;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  margin-top: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 90%;
+  cursor: pointer; /* Indicate it's clickable */
+}
+
+/* --- Details Sidebar Styling --- */
+.details-sidebar {
+  flex: 1; /* Takes up less space */
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  min-height: 400px; /* Give it some minimum height */
+  position: sticky; /* Make it stick on scroll */
+  top: 90px; /* Position below header */
+}
+
+.details-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #aaa;
+  text-align: center;
+}
+
+.details-placeholder svg {
+  /* Basic clock icon styling */
+  width: 50px;
+  height: 50px;
+  margin-bottom: 15px;
+}
+
+.appointment-details h4 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.appointment-doctor-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.doctor-initials {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #e6f7f6;
+  color: #00796b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.doctor-name-spec p {
+  margin: 0;
+  line-height: 1.4;
+}
+.doctor-name-spec p:first-child {
+  font-weight: 600;
+  color: #333;
+}
+.doctor-name-spec span {
+  /* Style for specialty tag */
+  background-color: #f0f2f5;
+  color: #555;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 5px; /* Space it out */
+}
+
+.appointment-info-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+  font-size: 14px;
+  color: #555;
+}
+
+.details-actions {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.details-actions button {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.reschedule-btn {
+  background-color: #00a79d;
+  color: white;
+}
+
+.cancel-btn-details {
+  background-color: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}

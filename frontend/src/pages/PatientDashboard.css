@@ -1,0 +1,108 @@
+/* .dashboard-content {
+  /* No specific styles needed here, as it's the main container for the content */
+/* }  */
+
+.dashboard-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 25px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* New search section styles (from Image 2) */
+.search-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e9ecef;
+}
+
+.search-section .title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-section .title-row h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.preview-booking-btn {
+  background-color: #00a79d;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.preview-booking-btn:hover {
+  background-color: #00857b;
+}
+
+.search-inputs {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(250px, 1fr)
+  ); 
+  gap: 20px;
+}
+
+.search-inputs .input-group {
+  position: relative;
+}
+
+.search-inputs .input-group label {
+  position: absolute; /* For icon */
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 16px; /* Example for icon */
+}
+
+.search-inputs .input-group input,
+.search-inputs .input-group select {
+  width: 100%;
+  padding: 12px 15px 12px 40px; /* Adjust padding for icon */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  -webkit-appearance: none; /* Remove default arrow for select */
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fcfcfc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.search-inputs .input-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px; /* Make space for custom arrow */
+}
+
+.hospital-list {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(350px, 1fr)
+  ); /* Wider cards, fewer per row */
+  gap: 30px;
+}

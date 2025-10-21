@@ -1,0 +1,28 @@
+/* Import a modern, clean font, like Poppins or Inter, from Google Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+/* Or if you prefer Poppins: @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap'); */
+
+/* Basic Reset and Global Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif; /* Use the imported font */
+  background-color: #f0f2f5; /* Light background for the overall page */
+  color: #333; /* Default text color */
+  overflow-x: hidden;
+}
+
+/* Link Base Styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Button Base Styles */
+button {
+  font-family: "Inter", sans-serif;
+}

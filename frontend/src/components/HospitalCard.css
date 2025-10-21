@@ -1,0 +1,91 @@
+.hospital-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e9ecef; /* Subtle border */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.hospital-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 1px solid #e9ecef; 
+}
+
+.card-content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-title {
+  font-size: 19px; /* Slightly larger */
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.card-address {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 400;
+}
+
+.services-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.service-tag {
+  background-color: #f0f2f5;
+  color: #555;
+  padding: 6px 12px; 
+  border-radius: 20px; 
+  font-size: 13px; /* Slightly larger */
+  font-weight: 500;
+  white-space: nowrap; /* Prevent tags from breaking */
+}
+
+.card-actions {
+  margin-top: auto;
+}
+
+.details-button {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #00a79d;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-left: 2rem;
+}
+
+.details-button:hover {
+  background-color: #00857b;
+}

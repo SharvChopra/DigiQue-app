@@ -1,0 +1,220 @@
+.help-feedback-page {
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.page-subtitle {
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 30px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.faq-section,
+.feedback-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.faq-section h3,
+.feedback-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.faq-item details {
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+.faq-item details:last-child {
+  border-bottom: none;
+}
+.faq-item summary {
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+}
+.faq-item summary::after {
+  content: "▼";
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+.faq-item details[open] summary::after {
+  transform: rotate(180deg);
+}
+.faq-item p {
+  margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.faq-content {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1),
+    opacity 0.3s ease-in-out, margin-top 0.3s ease-in-out;
+  margin-top: 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.faq-item details[open] > .faq-content {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 15px;
+}
+
+.feedback-section {
+  background-color: #ffffff;
+  padding: 30px; /* Increased padding */
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07); /* Softer shadow */
+  border: 1px solid #e9ecef; /* Subtle border */
+}
+
+.feedback-section h3 {
+  font-size: 19px; /* Slightly larger */
+  font-weight: 600;
+  margin: 0 0 25px 0; /* More space below title */
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Feedback Form Styling */
+.feedback-form .form-group {
+  margin-bottom: 20px;
+}
+
+.feedback-form label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 14px;
+}
+
+.feedback-form input,
+.feedback-form textarea,
+.feedback-form select {
+  /* Apply styles consistently */
+  width: 100%;
+  padding: 12px 15px; /* Consistent padding */
+  border: 1px solid #dce1e7; /* Softer border color */
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: #fcfdff; /* Very light background */
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Add transition for hover */
+  -webkit-appearance: none; /* Remove default styling */
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.feedback-form select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px; /* Make space for custom arrow */
+}
+
+.feedback-form input:hover,
+.feedback-form textarea:hover,
+.feedback-form select:hover {
+  border-color: #b0c5e0; 
+}
+
+.feedback-form input:focus,
+.feedback-form textarea:focus,
+.feedback-form select:focus {
+  outline: none;
+  border-color: #007bff; /* Blue border on focus */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15); /* Subtle glow on focus */
+}
+
+.feedback-form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Submit Button Styling */
+.feedback-form button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background-color: #00a79d; /* Brand color */
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s ease, transform 0.1s ease; /* Add transform transition */
+}
+
+.feedback-form button:hover {
+  background-color: #00857b; /* Darker shade on hover */
+  transform: translateY(-1px); /* Slight lift effect */
+}
+
+/* Disabled state for button */
+.feedback-form button:disabled {
+  background-color: #a0d9d6; /* Lighter, muted color when disabled */
+  cursor: not-allowed;
+  transform: none; /* No lift effect when disabled */
+}
+
+/* Contact Section Styling */
+.contact-section {
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.contact-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+}
+.contact-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.contact-item h4 {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.contact-item p {
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+}
