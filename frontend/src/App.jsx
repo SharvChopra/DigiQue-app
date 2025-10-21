@@ -9,6 +9,7 @@ import HospitalDetail from "./pages/HospitalDetail";
 import "./App.css";
 import MyAppointments from "./pages/MyAppointments";
 import HelpFeedback from "./pages/HelpFeedback";
+import PatientSettings from "./pages/PatientSettings";
 
 function App() {
   return (
@@ -53,6 +54,16 @@ function App() {
             <ProtectedRoute>
               <DashboardLayout>
                 <HelpFeedback />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <DashboardLayout>
+                <PatientSettings />
               </DashboardLayout>
             </ProtectedRoute>
           }
