@@ -6,7 +6,6 @@ import { useAuth } from "../context/AuthContext";
 export default function SignInForm({ className }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const { login } = useAuth();
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
@@ -29,7 +28,6 @@ export default function SignInForm({ className }) {
       login(data.token);
 
       toast.success("Signed in successfully!");
-      navigate("/patient-dashboard");
     } catch (err) {
       toast.error(err.message || "Sign in failed.");
     }
