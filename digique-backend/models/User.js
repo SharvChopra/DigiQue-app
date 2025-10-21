@@ -1,9 +1,17 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
+const AddressSchema = new Schema(
+  {
+    street: String,
+    city: String,
+    state: String,
+    zipCode: String,
+  },
+  { _id: false }
+);
 const UserSchema = new Schema(
   {
-    // REMOVE the clerkId field. It's not needed.
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     firstName: { type: String, required: true },
@@ -14,6 +22,16 @@ const UserSchema = new Schema(
       type: String,
       enum: ["PATIENT", "HOSPITAL"],
       required: true,
+    },
+    dateOfBirth: { type: Date },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other", "Prefer not to say"],
+    },
+    address: { type: AddressSchema },
+    emergencyContact: {
+      name: String,
+      phone: String,
     },
   },
   { timestamps: true }
