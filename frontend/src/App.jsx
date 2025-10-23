@@ -50,7 +50,6 @@ function App() {
         <Route path="/sign-in" element={<AuthPage />} />
         <Route path="/" element={<AuthPage />} />
 
-        {/* --- Patient Protected Routes --- */}
         <Route
           path="/patient-dashboard"
           element={

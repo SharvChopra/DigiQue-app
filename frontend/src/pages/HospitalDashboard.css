@@ -1,0 +1,92 @@
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+}
+.stat-card h4 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #6c757d;
+  font-weight: 500;
+}
+.stat-card .value {
+  font-size: 28px;
+  font-weight: 600;
+  color: #333;
+}
+
+.upcoming-appointments,
+.quick-actions,
+.onboarding-prompt {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e9ecef;
+}
+
+.upcoming-appointments h4,
+.quick-actions h4,
+.onboarding-prompt h4 {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.appointment-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 14px;
+}
+.appointment-item:last-child {
+  border-bottom: none;
+}
+.appointment-item .time {
+  font-weight: 500;
+  color: #555;
+}
+.appointment-item .details {
+  color: #777;
+}
+
+.quick-actions-buttons {
+  display: flex;
+  gap: 15px;
+}
+.quick-actions-buttons button {
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.2s;
+}
+.quick-actions-buttons button:hover {
+  background-color: #0056b3;
+}
+.quick-actions-buttons .secondary-btn {
+  background-color: #6c757d;
+}
+.quick-actions-buttons .secondary-btn:hover {
+  background-color: #5a6268;
+}
+
+.onboarding-prompt p {
+  margin-bottom: 15px;
+  color: #555;
+}
