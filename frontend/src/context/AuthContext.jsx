@@ -50,16 +50,26 @@ export const AuthProvider = ({ children }) => {
       console.log("AuthContext: Loading set to false"); // Log 7
     },
     [navigate]
-  ); // Removed apiURL, logout from dependencies as they don't change or cause loops
+  );
 
   useEffect(() => {
     fetchUser(token);
   }, [token, fetchUser]);
 
+  useEffect(() => {
+    if (user) {
+      if (user.role === "PATIENT") {
+        navigate("/patient-dashboard");
+      } else if (user.role === "HOSPITAL") {
+        navigate("/hospital-dashboard");
+      }
+    }
+  }, [user, navigate]);
+
   const login = (newToken) => {
     console.log("AuthContext: login function called."); // Log 8
     localStorage.setItem("token", newToken);
-    setToken(newToken); // This triggers the useEffect above
+    setToken(newToken);
   };
 
   const logout = () => {

@@ -34,12 +34,18 @@ router.get("/me", authMiddleware, async (req, res) => {
   try {
     const appointments = await Appointment.find({ patient: req.user.id })
       .populate("doctor", "name specialty")
-      .populate("hospital", "name address")
+      .populate("Hospital", "name address")
       .sort({ date: -1 });
+
+    console.log(
+      "Fetched appointments for /me:",
+      JSON.stringify(appointments, null, 2)
+    );
 
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
+    console.error("Error fetching /me appointments:", err.message); // Log the specific error
     res.status(500).send("Server Error");
   }
 });

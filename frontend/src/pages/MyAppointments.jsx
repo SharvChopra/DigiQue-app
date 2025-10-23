@@ -198,7 +198,6 @@ export default function MyAppointments() {
             {selectedAppointment ? (
               <div className="appointment-details">
                 <h4>Appointment Details</h4>
-                {/* ... (Doctor Info, Hospital, Date, Time rows - same as before) ... */}
 
                 <div className="appointment-doctor-info">
                   <div className="doctor-initials">
@@ -217,7 +216,10 @@ export default function MyAppointments() {
                   </div>
                 </div>
                 <div className="appointment-info-row">
-                  🏥 <span>{selectedAppointment.hospital.name}</span>
+                  🏥{" "}
+                  <span>
+                    {selectedAppointment.hospital?.name || "Unknown Hospital"}
+                  </span>
                 </div>
                 <div className="appointment-info-row">
                   📅 <span>{formatDate(selectedAppointment.date)}</span>

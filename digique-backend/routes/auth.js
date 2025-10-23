@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
+const Hospital = require("../models/Hospital.js");
 
 const router = express.Router();
 
@@ -16,6 +17,12 @@ router.post("/register", async (req, res) => {
       location,
       role,
     } = req.body;
+
+    if (!firstName || !lastName || !email || !password || !role) {
+      return res.status(400).json({
+        message: "Please fill in all required fields",
+      });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -37,8 +44,25 @@ router.post("/register", async (req, res) => {
       role: role.toUpperCase(),
     });
 
+    if (newUser.role === "HOSPITAL") {
+      const newHospital = new Hospital({
+        name: `${firstName}'s Clinic` || "New Hospital Profile",
+        address: location || "Please update address",
+        location: location || "Please update location",
+        about: "Please update description",
+        services: [],
+        adminUser: newUser._id,
+      });
+
+      const savedHospital = await newHospital.save();
+
+      newUser.managedHospital = savedHospital._id;
+    }
+
     await newUser.save();
-    res.status(201).json({ message: "User registered successfully." });
+    res
+      .status(201)
+      .json({ message: "User registered successfully.Please Sign in" });
   } catch (error) {
     console.error("Error in /register:", error);
     res.status(500).json({ message: "Server error", error });

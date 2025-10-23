@@ -23,7 +23,7 @@ export default function Header() {
       <div className="header-right">
         <div className="user-profile">
           <div className="user-avatar">
-            {avatarInitial} {/* Display initial */}
+            {avatarInitial}
           </div>
           {user && (
             <button onClick={logout} className="logout-button">

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react"; 
+import React, { useState, useEffect, useMemo } from "react";
 import HospitalCard from "../components/HospitalCard";
 import "./PatientDashboard.css";
 
@@ -79,7 +79,6 @@ export default function PatientDashboard() {
     fetchHospitals();
   }, [userLocation, geolocationAttempted, apiURL]);
 
-  // --- Step 3: Filter Hospitals based on search inputs ---
   const filteredHospitals = useMemo(() => {
     return hospitals.filter((hospital) => {
       const hospitalNameMatch = hospital.name
@@ -90,8 +89,6 @@ export default function PatientDashboard() {
             (service) => service.toLowerCase() === searchService.toLowerCase()
           )
         : true;
-      // Note: Doctor search requires a more complex backend or nested data.
-      // This is a basic implementation assuming doctor names might be in 'about' or 'name'.
       const doctorNameMatch = hospital.name
         .toLowerCase()
         .includes(searchDoctorName.toLowerCase());

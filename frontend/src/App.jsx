@@ -68,6 +68,17 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/hospital-dashboard"
+          element={
+            <ProtectedRoute>
+              {" "}
+              <DashboardLayout>
+                <HospitalDashboard />
+              </DashboardLayout>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>

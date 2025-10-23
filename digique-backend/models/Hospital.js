@@ -7,7 +7,7 @@ const HospitalSchema = new mongoose.Schema(
     about: { type: String },
     bannerImage: { type: String },
     services: [{ type: String }],
-    // adminUser: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    adminUser: { type: Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );

@@ -33,6 +33,11 @@ const UserSchema = new Schema(
       name: String,
       phone: String,
     },
+    managedHospital: {
+      type: Schema.Types.ObjectId,
+      ref: "Hospital",
+      required: false,
+    },
   },
   { timestamps: true }
 );

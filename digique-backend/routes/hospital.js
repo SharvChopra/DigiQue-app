@@ -4,7 +4,7 @@ const Hospital = require("../models/Hospital.js");
 
 router.get("/", async (req, res) => {
   try {
-    const { location } = req.query; // Get location from query params (e.g., /api/hospitals?location=Ludhiana)
+    const { location } = req.query; 
     const filter = {};
 
     if (location) {
