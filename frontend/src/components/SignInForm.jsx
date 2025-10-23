@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Add useNavigate back
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
 export default function SignInForm({ className }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Get navigate function
   const { login } = useAuth();
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
@@ -18,21 +19,20 @@ export default function SignInForm({ className }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || "Failed to login");
       }
 
-      login(data.token);
+      login(data.token); // Update the context
 
       toast.success("Signed in successfully!");
+      navigate("/patient-dashboard");
+      // --- END ADDITION ---
     } catch (err) {
       toast.error(err.message || "Sign in failed.");
     }
   };
-
   return (
     <form onSubmit={handleSubmit} className={className}>
       <h3>Welcome Back!</h3>

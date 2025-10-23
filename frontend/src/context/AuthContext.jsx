@@ -5,89 +5,86 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { useNavigate } from "react-router-dom";
 
-// Create the context
 const AuthContext = createContext(null);
 const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
-// Create the provider component
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate(); // Get the navigate function from React Router
+  const navigate = useNavigate();
 
-  // Function to fetch user data using a token
-  const fetchUser = useCallback(async (currentToken) => {
-    if (currentToken) {
-      try {
-        const response = await fetch(`${apiURL}/users/me`, {
-          headers: { Authorization: `Bearer ${currentToken}` },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data);
-        } else {
-          // If token is invalid, log the user out
-          logout();
+  const fetchUser = useCallback(
+    async (currentToken) => {
+      console.log(
+        "AuthContext: Attempting fetchUser with token:",
+        currentToken ? "Exists" : "None"
+      ); // Log 1
+      if (currentToken) {
+        try {
+          const response = await fetch(`${apiURL}/users/me`, {
+            headers: { Authorization: `Bearer ${currentToken}` },
+          });
+          console.log(
+            "AuthContext: /api/users/me response status:",
+            response.status
+          ); // Log 2
+          if (response.ok) {
+            const data = await response.json();
+            console.log("AuthContext: User data received:", data); // Log 3
+            setUser(data);
+          } else {
+            console.log("AuthContext: Token invalid or expired, logging out."); // Log 4
+            logout(); // Use the logout function which clears state and storage
+          }
+        } catch (error) {
+          console.error("AuthContext: Failed to fetch user:", error); // Log 5
+          logout(); // Logout on error
         }
-      } catch (error) {
-        console.error("Failed to fetch user:", error);
-        logout();
+      } else {
+        console.log("AuthContext: No token found."); // Log 6
       }
-    }
-    setLoading(false);
-  }, []);
+      setLoading(false);
+      console.log("AuthContext: Loading set to false"); // Log 7
+    },
+    [navigate]
+  ); // Removed apiURL, logout from dependencies as they don't change or cause loops
 
-  // This effect runs on initial page load to check for an existing session
   useEffect(() => {
     fetchUser(token);
   }, [token, fetchUser]);
 
-  // --- THIS IS THE CORE OF THE FIX ---
-  // This effect runs whenever the 'user' state changes.
-  useEffect(() => {
-    // If the user object is successfully populated (meaning they are logged in)
-    if (user) {
-      // Redirect based on their role
-      if (user.role === "PATIENT") {
-        navigate("/patient-dashboard");
-      } else if (user.role === "HOSPITAL") {
-        navigate("/hospital-dashboard"); // For future use
-      }
-    }
-  }, [user, navigate]); // It depends on the user object and navigate function
-
-  // Function to handle user login
   const login = (newToken) => {
+    console.log("AuthContext: login function called."); // Log 8
     localStorage.setItem("token", newToken);
-    setToken(newToken); // This will trigger the useEffect above to fetch the user
+    setToken(newToken); // This triggers the useEffect above
   };
 
-  // Function to handle user logout
   const logout = () => {
+    console.log("AuthContext: logout function called."); // Log 9
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
-    navigate("/sign-in"); // Redirect to the sign-in page on logout
+    navigate("/sign-in");
   };
 
   const refetchUser = useCallback(async () => {
+    console.log("AuthContext: refetchUser called."); // Log 10
     await fetchUser(token);
   }, [token, fetchUser]);
+
+  console.log("AuthContext State: user=", user, "loading=", loading); // Log 11
 
   return (
     <AuthContext.Provider
       value={{ token, user, loading, login, logout, refetchUser }}
     >
-      {/* Don't render children until the initial loading is complete */}
       {!loading && children}
     </AuthContext.Provider>
   );
 };
-
-// Custom hook to easily consume the context
 export const useAuth = () => {
   return useContext(AuthContext);
 };

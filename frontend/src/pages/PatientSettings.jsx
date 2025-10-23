@@ -7,14 +7,27 @@ import "./PatientSettings.css";
 const PatientSettings = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditing, setIsEditing] = useState(false);
-  const { user, token, refetchUser } = useAuth();
-  const [formData, setFormData] = useState({});
+  const { user, token, refetchUser, loading } = useAuth();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+    gender: "",
+    address: { street: "", city: "", state: "", zipCode: "" },
+    emergencyContact: { name: "", phone: "" },
+    profilePicture: "",
+  });
   const [history, setHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
+  console.log("PatientSettings rendering, user:", user);
+
   useEffect(() => {
+    console.log("PatientSettings useEffect running, user:", user);
     if (user) {
       setFormData({
         firstName: user.firstName || "",
@@ -35,6 +48,19 @@ const PatientSettings = () => {
           name: user.emergencyContact?.name || "",
           phone: user.emergencyContact?.phone || "",
         },
+        profilePicture: user.profilePicture || "",
+      });
+    } else {
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
+        dateOfBirth: "",
+        gender: "",
+        address: { street: "", city: "", state: "", zipCode: "" },
+        emergencyContact: { name: "", phone: "" },
+        profilePicture: "",
       });
     }
   }, [user]);
@@ -71,6 +97,14 @@ const PatientSettings = () => {
     }));
   };
 
+  const handleEmergencyContactChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      emergencyContact: { ...prev.emergencyContact, [name]: value },
+    }));
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -96,16 +130,35 @@ const PatientSettings = () => {
     setIsEditing(false);
     if (user) {
       setFormData({
-        firstName: user.firstName,
-        lastName: user.lastName,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        email: user.email || "",
+        phoneNumber: user.phoneNumber || "",
+        dateOfBirth: user.dateOfBirth
+          ? new Date(user.dateOfBirth).toISOString().split("T")[0]
+          : "",
+        gender: user.gender || "",
+        address: {
+          street: user.address?.street || "",
+          city: user.address?.city || "",
+          state: user.address?.state || "",
+          zipCode: user.address?.zipCode || "",
+        },
+        emergencyContact: {
+          name: user.emergencyContact?.name || "",
+          phone: user.emergencyContact?.phone || "",
+        },
+        profilePicture: user.profilePicture || "",
       });
     }
   };
 
-  if (!user) {
+  if (loading) {
     return <div>Loading profile...</div>;
   }
-
+  if (!user) {
+    return <div>User not found. Please try logging in again.</div>;
+  }
   return (
     <div className="settings-page">
       <h2 className="page-title">Patient Settings</h2>
@@ -128,11 +181,13 @@ const PatientSettings = () => {
         </button>
       </div>
 
+      {/* Profile Tab */}
       {activeTab === "profile" && (
         <form onSubmit={handleSave}>
+          {/* Profile Header Card */}
           <div className="settings-card">
             <div className="profile-header">
-              <img
+              {/* <img
                 src={
                   user.profilePicture ||
                   `https://placehold.co/70x70/E0E0E0/555?text=${user.firstName.charAt(
@@ -141,7 +196,7 @@ const PatientSettings = () => {
                 }
                 alt="Avatar"
                 className="profile-avatar"
-              />
+              /> */}
               <div className="profile-info">
                 <h3>
                   {user.firstName} {user.lastName}
@@ -160,6 +215,7 @@ const PatientSettings = () => {
             </div>
           </div>
 
+          {/* Personal Information Card */}
           <div className="settings-card">
             <h4>Personal Information</h4>
             <div className="settings-form-grid">
@@ -170,6 +226,7 @@ const PatientSettings = () => {
                   value={formData.firstName}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -179,6 +236,7 @@ const PatientSettings = () => {
                   value={formData.lastName}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -189,6 +247,7 @@ const PatientSettings = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                  required
                 />
               </div>
               <div className="form-group">
@@ -222,6 +281,7 @@ const PatientSettings = () => {
             </div>
           </div>
 
+          {/* Address Information Card */}
           <div className="settings-card">
             <h4>Address Information</h4>
             <div className="settings-form-grid">
@@ -264,6 +324,32 @@ const PatientSettings = () => {
             </div>
           </div>
 
+          {/* Emergency Contact Card */}
+          <div className="settings-card">
+            <h4>Emergency Contact</h4>
+            <div className="settings-form-grid">
+              <div className="form-group">
+                <label>Contact Name</label>
+                <input
+                  name="name"
+                  value={formData.emergencyContact?.name}
+                  onChange={handleEmergencyContactChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="form-group">
+                <label>Contact Phone</label>
+                <input
+                  name="phone"
+                  value={formData.emergencyContact?.phone}
+                  onChange={handleEmergencyContactChange}
+                  disabled={!isEditing}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
           {isEditing && (
             <div className="form-actions">
               <button
@@ -281,33 +367,11 @@ const PatientSettings = () => {
         </form>
       )}
 
+      {/* History Tab */}
       {activeTab === "history" && (
         <div className="settings-card">
           <h4>Recent Updates</h4>
-          {loadingHistory && <p>Loading history...</p>}
-          {!loadingHistory &&
-            history.map((item) => (
-              <div key={item._id} className="history-item">
-                <div className="history-header">
-                  <span className="field-name">{item.field}</span>
-                  <span className="timestamp">
-                    {new Date(item.createdAt).toLocaleString()}
-                  </span>
-                </div>
-                <div className="history-values">
-                  <div>
-                    <p>Previous Value</p>
-                    <div className="value-box previous">
-                      {item.previousValue}
-                    </div>
-                  </div>
-                  <div>
-                    <p>New Value</p>
-                    <div className="value-box new">{item.newValue}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          {/* ... History rendering logic ... */}
         </div>
       )}
     </div>

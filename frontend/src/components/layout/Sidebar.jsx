@@ -15,6 +15,9 @@ export default function Sidebar() {
           <li>
             <NavLink to="/help-feedback">Help / Feedback</NavLink>
           </li>
+          <li>
+            <NavLink to="/settings">Settings</NavLink>
+          </li>
         </ul>
       </nav>
     </aside>
