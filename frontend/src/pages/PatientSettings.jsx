@@ -181,10 +181,8 @@ const PatientSettings = () => {
         </button>
       </div>
 
-      {/* Profile Tab */}
       {activeTab === "profile" && (
         <form onSubmit={handleSave}>
-          {/* Profile Header Card */}
           <div className="settings-card">
             <div className="profile-header">
               {/* <img
@@ -215,7 +213,6 @@ const PatientSettings = () => {
             </div>
           </div>
 
-          {/* Personal Information Card */}
           <div className="settings-card">
             <h4>Personal Information</h4>
             <div className="settings-form-grid">
@@ -371,7 +368,41 @@ const PatientSettings = () => {
       {activeTab === "history" && (
         <div className="settings-card">
           <h4>Recent Updates</h4>
-          {/* ... History rendering logic ... */}
+          {loadingHistory && <p>Loading history...</p>}
+
+          {!loadingHistory &&
+            history.length > 0 &&
+            history.map((item) => (
+              <div key={item._id} className="history-item">
+                <div className="history-header">
+                  <span className="field-name">{item.field}</span>
+                  <span className="timestamp">
+                    {new Date(item.createdAt).toLocaleString([], {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
+                </div>
+                <div className="history-values">
+                  <div>
+                    <p>Previous Value</p>
+                    <div className="value-box previous">
+                      {item.previousValue || "Not Set"}
+                    </div>
+                  </div>
+                  <div>
+                    <p>New Value</p>
+                    <div className="value-box new">
+                      {item.newValue || "Not Set"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+          {!loadingHistory && history.length === 0 && (
+            <p>No profile updates have been recorded yet.</p>
+          )}
         </div>
       )}
     </div>
