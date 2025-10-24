@@ -1,15 +1,17 @@
 /* Add/Merge these styles into HospitalAdmin.css */
 
 .hospital-profile-page .page-title {
-  font-size: 24px;
+  font-size: 2.1rem;
   font-weight: 600;
   color: #333;
   margin-bottom: 5px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .hospital-profile-page .page-subtitle {
-  font-size: 15px;
+  font-size: 1.1rem;
   color: #777;
   margin-bottom: 30px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .profile-card {
@@ -19,6 +21,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
   border: 1px solid #e9ecef;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .profile-card h4 {
   font-size: 18px;
@@ -54,7 +57,7 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border: 1px solid #ced4da;
   border-radius: 6px;
   font-size: 15px;
@@ -168,4 +171,85 @@
 }
 .cancel-btn:hover {
   background-color: #e9ecef;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.edit-profile-btn {
+  padding: 12px 18px;
+  background-color: #007bff; /* Example blue */
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 1.5rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-profile-btn:hover {
+  background-color: #0056b3;
+}
+
+.read-only-field {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e0;
+  background-color: #f8f8f8;
+  border-radius: 4px;
+  min-height: 38px; /* Match input height */
+  display: flex; /* For vertical alignment */
+  align-items: center; /* For vertical alignment */
+  color: #333;
+}
+
+.read-only-field a {
+  color: #007bff;
+  text-decoration: none;
+}
+.read-only-field a:hover {
+  text-decoration: underline;
+}
+
+.hospital-logo-preview {
+  max-width: 100px; /* Adjust as needed */
+  max-height: 100px;
+  object-fit: contain;
+  margin-top: 5px;
+  border: 1px solid #e0e0e0;
+  padding: 5px;
+  background-color: #fff;
+}
+
+.services-tags-display {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.service-tag-item {
+  background-color: #e9ecef;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #495057;
+}
+
+.service-tag-item button {
+  background: none;
+  border: none;
+  color: #dc3545;
+  margin-left: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0;
 }
