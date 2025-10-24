@@ -115,6 +115,16 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/hospital-profile"
+          element={
+            <ProtectedRoute allowedRoles={["HOSPITAL"]}>
+              <HospitalDashboardLayout>
+                <HospitalProfile />
+              </HospitalDashboardLayout>
+            </ProtectedRoute>
+          }
+        />
         {/* Add other hospital routes similarly */}
         {/* Example:
          <Route

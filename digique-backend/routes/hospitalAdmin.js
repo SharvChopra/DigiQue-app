@@ -7,7 +7,7 @@ const Hospital = require("../models/Hospital.js");
 
 router.get("/overview-summary", hospitalAdminAuth, async (req, res) => {
   try {
-    const hospitalI = req.hospitalId;
+    const hospitalId = req.hospitalId;
 
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
@@ -20,46 +20,39 @@ router.get("/overview-summary", hospitalAdminAuth, async (req, res) => {
     weekEnd.setHours(23, 59, 59, 999);
 
     const [
-      todaysAppointmentCount,
+      todaysAppointmentsCount, // Use this name
       weekAppointmentsCount,
       totalDoctorsCount,
       upcomingAppointments,
       hospitalProfile,
     ] = await Promise.all([
-      // Count appointments for today
       Appointment.countDocuments({
         hospital: hospitalId,
         date: { $gte: todayStart, $lte: todayEnd },
-        status: "Scheduled", // Only count scheduled
+        status: "Scheduled",
       }),
-      // Count appointments for the next week
       Appointment.countDocuments({
         hospital: hospitalId,
         date: { $gte: todayStart, $lte: weekEnd },
         status: "Scheduled",
       }),
-      // Count total doctors for this hospital
       Doctor.countDocuments({ hospital: hospitalId }),
-      // Get next 3 upcoming appointments
       Appointment.find({
         hospital: hospitalId,
         date: { $gte: todayStart },
         status: "Scheduled",
       })
-        .sort({ date: 1 }) // Sort ascending by date
+        .sort({ date: 1 })
         .limit(3)
-        .populate("patient", "firstName lastName") // Get patient name
-        .populate("doctor", "name"), // Get doctor name
-      // Get hospital profile to check if it's still using defaults
+        .populate("patient", "firstName lastName")
+        .populate("doctor", "name"),
       Hospital.findById(hospitalId).select("name about services"),
     ]);
 
-    // --- Check Profile Completeness (Example Check) ---
     const isProfileComplete =
       hospitalProfile &&
       hospitalProfile.about !== "Please update description" &&
       hospitalProfile.services.length > 0;
-
     const summary = {
       stats: {
         today: todaysAppointmentsCount,
@@ -75,6 +68,65 @@ router.get("/overview-summary", hospitalAdminAuth, async (req, res) => {
     res.json(summary);
   } catch (error) {
     console.error("Error fetching overview summary:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.get("/my-profile", hospitalAdminAuth, async (req, res) => {
+  try {
+    const hospitalId = req.hospitalId;
+    const hospital = await Hospital.findById(hospitalId);
+    if (!hospital) {
+      return res.status(404).json({
+        msg: "Hospital Profile not found for this admin.",
+      });
+    }
+    res.json(hospital);
+  } catch (error) {
+    console.error("Error fetching hospital profile:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.put("/my-profile", hospitalAdminAuth, async (req, res) => {
+  try {
+    const hospitalId = req.hospitalId;
+    const {
+      name,
+      address,
+      location,
+      about,
+      services,
+      logoUrl,
+      contactPhone,
+      contactEmail,
+      websiteUrl,
+    } = req.body;
+
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (address) updateFields.address = address;
+    if (location) updateFields.location = location;
+    if (about) updateFields.about = about;
+    if (services) updateFields.services = services;
+    if (logoUrl) updateFields.logoUrl = logoUrl;
+    if (contactPhone) updateFields.contactPhone = contactPhone;
+    if (contactEmail) updateFields.contactEmail = contactEmail;
+    if (websiteUrl) updateFields.websiteUrl = websiteUrl;
+
+    const updatedHospital = await Hospital.findByIdAndUpdate(
+      hospitalId,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+    if (!updatedHospital) {
+      return res.status(404).json({
+        msg: "Hospital profile not found for the update",
+      });
+    }
+    res.json(updatedHospital);
+  } catch (error) {
+    console.error("Error updating hospital Profile:", error);
     res.status(500).send("Server Error");
   }
 });

@@ -9,6 +9,10 @@ const HospitalSchema = new mongoose.Schema(
     bannerImage: { type: String },
     services: [{ type: String }],
     adminUser: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    logoUrl: { type: String, default: "" },
+    contactPhone: { type: String, default: "" },
+    contactEmail: { type: String, default: "" },
+    websiteUrl: { type: String, default: "" },
   },
   { timestamps: true }
 );

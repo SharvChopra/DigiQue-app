@@ -10,12 +10,14 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   border: 1px solid #e9ecef;
 }
 .stat-card h4 {
   margin: 0 0 10px 0;
   font-size: 14px;
   color: #6c757d;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 500;
 }
 .stat-card .value {
@@ -33,6 +35,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   margin-bottom: 30px;
   border: 1px solid #e9ecef;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .upcoming-appointments h4,
@@ -41,6 +44,7 @@
   margin: 0 0 20px 0;
   font-size: 18px;
   font-weight: 600;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .appointment-item {
@@ -49,6 +53,7 @@
   padding: 10px 0;
   border-bottom: 1px solid #f1f3f5;
   font-size: 14px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .appointment-item:last-child {
   border-bottom: none;
@@ -74,6 +79,8 @@
   cursor: pointer;
   background-color: #007bff;
   color: white;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
   transition: background-color 0.2s;
 }
 .quick-actions-buttons button:hover {
