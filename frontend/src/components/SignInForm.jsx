@@ -14,21 +14,49 @@ export default function SignInForm({ className }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${apiURL}/auth/login`, {
+      // --- Login Request ---
+      const loginResponse = await fetch(`${apiURL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to login");
+
+      const loginData = await loginResponse.json();
+
+      if (!loginResponse.ok) {
+        throw new Error(loginData.message || "Failed to login");
       }
 
-      login(data.token); // Update the context
+      const receivedToken = loginData.token;
+      login(receivedToken); // Update AuthContext with the new token
 
+      // --- Fetch User Role AFTER Login ---
+      // We need to determine where to redirect based on the role
+      let userRole = null;
+      try {
+        const userResponse = await fetch(`${apiURL}/users/me`, {
+          headers: { Authorization: `Bearer ${receivedToken}` },
+        });
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          userRole = userData.role; // Get the role directly
+        } else {
+          throw new Error("Could not fetch user role after login.");
+        }
+      } catch (roleError) {
+        toast.error("Login successful, but failed to determine user role.");
+        return; // Stop execution
+      }
+
+      // --- Role-Based Navigation ---
       toast.success("Signed in successfully!");
-      navigate("/patient-dashboard");
-      // --- END ADDITION ---
+      if (userRole === "PATIENT") {
+        navigate("/patient-dashboard");
+      } else if (userRole === "HOSPITAL") {
+        navigate("/hospital-dashboard");
+      } else {
+        navigate("/"); // Or back to sign-in
+      }
     } catch (err) {
       toast.error(err.message || "Sign in failed.");
     }

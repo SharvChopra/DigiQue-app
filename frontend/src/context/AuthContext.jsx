@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const AuthContext = createContext(null);
 const apiURL = import.meta.env.VITE_BACKEND_API_URL;
@@ -15,28 +15,19 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fetchUser = useCallback(
     async (currentToken) => {
-      console.log(
-        "AuthContext: Attempting fetchUser with token:",
-        currentToken ? "Exists" : "None"
-      ); // Log 1
       if (currentToken) {
         try {
           const response = await fetch(`${apiURL}/users/me`, {
             headers: { Authorization: `Bearer ${currentToken}` },
           });
-          console.log(
-            "AuthContext: /api/users/me response status:",
-            response.status
-          ); // Log 2
           if (response.ok) {
             const data = await response.json();
-            console.log("AuthContext: User data received:", data); // Log 3
             setUser(data);
           } else {
-            console.log("AuthContext: Token invalid or expired, logging out."); // Log 4
             logout(); // Use the logout function which clears state and storage
           }
         } catch (error) {
@@ -47,7 +38,6 @@ export const AuthProvider = ({ children }) => {
         console.log("AuthContext: No token found."); // Log 6
       }
       setLoading(false);
-      console.log("AuthContext: Loading set to false"); // Log 7
     },
     [navigate]
   );
@@ -58,22 +48,31 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (user) {
-      if (user.role === "PATIENT") {
+      const isOnPatientPage = location.pathname.startsWith("/patient-");
+      const isOnHospitalPage = location.pathname.startsWith("/hospital-");
+      const isAuthPage =
+        location.pathname === "/sign-in" || location.pathname === "/";
+
+      if (user.role === "PATIENT" && !isOnPatientPage) {
         navigate("/patient-dashboard");
-      } else if (user.role === "HOSPITAL") {
+      } else if (user.role === "HOSPITAL" && !isOnHospitalPage) {
         navigate("/hospital-dashboard");
+      } else if (isAuthPage) {
+        const dashboard =
+          user.role === "HOSPITAL"
+            ? "/hospital-dashboard"
+            : "/patient-dashboard";
+        navigate(dashboard);
       }
     }
-  }, [user, navigate]);
+  }, [user, navigate, location]);
 
   const login = (newToken) => {
-    console.log("AuthContext: login function called."); // Log 8
     localStorage.setItem("token", newToken);
     setToken(newToken);
   };
 
   const logout = () => {
-    console.log("AuthContext: logout function called."); // Log 9
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
@@ -81,11 +80,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   const refetchUser = useCallback(async () => {
-    console.log("AuthContext: refetchUser called."); // Log 10
     await fetchUser(token);
   }, [token, fetchUser]);
-
-  console.log("AuthContext State: user=", user, "loading=", loading); // Log 11
 
   return (
     <AuthContext.Provider

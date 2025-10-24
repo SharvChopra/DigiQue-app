@@ -100,7 +100,6 @@ export default function HospitalDashboard() {
           <h4>Total Doctors Listed</h4>
           <div className="value">{summary.stats.doctors}</div>
         </div>
-        {/* Add more stats if needed */}
       </div>
 
       <div className="upcoming-appointments">

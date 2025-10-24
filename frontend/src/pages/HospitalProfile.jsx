@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import "./HospitalAdmin.css";
 
 const HospitalProfile = () => {
+  console.log("HospitalProfile component is rendering!");
   const { token } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
@@ -20,21 +21,35 @@ const HospitalProfile = () => {
     about: "",
     services: [],
   });
-  const [originalData, setOriginalData] = useState(null); // To store initial data for cancel
+  const [originalData, setOriginalData] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serviceInput, setServiceInput] = useState("");
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
   const fetchProfile = useCallback(async () => {
+    console.log(
+      "HospitalProfile: useEffect fetchProfile running. Token:",
+      !!token
+    );
     if (!token) return;
     try {
       setLoading(true);
       const response = await fetch(`${apiURL}/hospital/my-profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      // --- Log Fetch Status ---
+      console.log(
+        "HospitalProfile: fetch /my-profile status:",
+        response.status
+      );
+      // --- End Log ---
       if (!response.ok) throw new Error("Failed to fetch hospital profile");
       const data = await response.json();
+
+      // --- Log Fetch Data ---
+      console.log("HospitalProfile: Profile data received:", data);
+      // --- End Log ---
 
       // Basic parsing of address string into components (improve if needed)
       const addressParts = (data.address || "").split(",");
@@ -153,9 +168,18 @@ const HospitalProfile = () => {
     }
   };
 
+  console.log("HospitalProfile: Rendering with state:", {
+    loading,
+    error,
+    hasFormData: !!formData.name,
+  });
+
   if (loading) return <div>Loading profile...</div>;
   if (error)
     return <p style={{ color: "red" }}>Error loading profile: {error}</p>;
+  // --- Log Before Returning JSX ---
+  console.log("HospitalProfile: Rendering actual form JSX.");
+  // --- End Log ---
   return (
     <div className="hospital-profile-page">
       <h2 className="page-title">Hospital Profile</h2>

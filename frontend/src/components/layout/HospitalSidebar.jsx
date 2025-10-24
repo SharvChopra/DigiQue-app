@@ -8,10 +8,7 @@ const HospitalSidebar = () => {
       <nav>
         <ul className="sidebar-nav">
           <li>
-            <NavLink to="/hospital-dashboard" end>
-              {" "}
-              📊 Overview
-            </NavLink>
+            <NavLink to="/hospital-dashboard"> 📊 Overview</NavLink>
           </li>
           <li>
             <NavLink to="/hospital-appointments">📅 Appointments</NavLink>

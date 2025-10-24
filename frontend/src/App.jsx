@@ -16,31 +16,8 @@ import HospitalDashboard from "./pages/HospitalDashboard"; // Placeholder from b
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { token, user, loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>; // Or spinner
-  }
-
-  if (!token) {
-    return <Navigate to="/sign-in" replace />;
-  }
-
-  // Role check if allowedRoles are specified
-  if (allowedRoles && !allowedRoles.includes(user?.role)) {
-    // Redirect to a suitable default page or unauthorized page
-    return (
-      <Navigate
-        to={user?.role === "PATIENT" ? "/patient-dashboard" : "/sign-in"}
-        replace
-      />
-    );
-  }
-
-  return children;
-};
+import HospitalProfile from "./pages/HospitalProfile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
