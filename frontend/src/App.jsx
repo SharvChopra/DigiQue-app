@@ -18,12 +18,12 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HospitalProfile from "./pages/HospitalProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ManageDoctors from "./pages/ManageDoctors";
 
 function App() {
   return (
     <>
       <Routes>
-        {/* Public Routes */}
         <Route path="/sign-in" element={<AuthPage />} />
         <Route path="/" element={<AuthPage />} />
 
@@ -83,7 +83,6 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={["HOSPITAL"]}>
               {" "}
-              {/* Role Check */}
               <HospitalDashboardLayout>
                 {" "}
                 {/* Use Hospital Layout */}
@@ -102,19 +101,17 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* Add other hospital routes similarly */}
-        {/* Example:
-         <Route
-           path="/hospital-doctors"
-           element={
-             <ProtectedRoute allowedRoles={['HOSPITAL']}>
-               <HospitalDashboardLayout>
-                 <ManageDoctors />
-               </HospitalDashboardLayout>
-             </ProtectedRoute>
-           }
-         />
-          <Route
+        <Route
+          path="/hospital-doctors"
+          element={
+            <ProtectedRoute allowedRoles={["HOSPITAL"]}>
+              <HospitalDashboardLayout>
+                <ManageDoctors />
+              </HospitalDashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        {/* <Route
            path="/hospital-settings" // Admin's user settings
            element={
              <ProtectedRoute allowedRoles={['HOSPITAL']}>
@@ -123,8 +120,7 @@ function App() {
                </HospitalDashboardLayout>
              </ProtectedRoute>
            }
-         />
-         */}
+         /> */}
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>

@@ -11,6 +11,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .modal-content {
@@ -98,4 +99,11 @@
   background-color: #00a79d;
   border: none;
   color: white;
+}
+
+.form-main{
+  margin: 0 10px;
+}
+.heading{
+  font-size: 1.6rem;
 }

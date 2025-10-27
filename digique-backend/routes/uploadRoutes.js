@@ -1,4 +1,3 @@
-// routes/uploadRoutes.js
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -38,13 +37,12 @@ const upload = multer({
 router.post(
   "/hospital-logo",
   hospitalAdminAuth, // Protect this route
-  upload.single("logo"), // 'logo' must match the FormData key
+  upload.single("logo"), 
   (req, res) => {
     if (!req.file) {
       return res.status(400).json({ msg: "No file uploaded." });
     }
 
-    // Return the URL to the new file
     const imageUrl = `/uploads/hospital-logos/${req.file.filename}`;
     res.json({ msg: "Logo uploaded successfully!", imageUrl: imageUrl });
   }

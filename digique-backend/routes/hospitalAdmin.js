@@ -98,6 +98,7 @@ router.put("/my-profile", hospitalAdminAuth, async (req, res) => {
       about,
       services,
       logoUrl,
+      bannerImage,
       contactPhone,
       contactEmail,
       websiteUrl,
@@ -110,6 +111,7 @@ router.put("/my-profile", hospitalAdminAuth, async (req, res) => {
     if (about) updateFields.about = about;
     if (services) updateFields.services = services;
     if (logoUrl) updateFields.logoUrl = logoUrl;
+    if (bannerImage) updateFields.bannerImage = bannerImage;
     if (contactPhone) updateFields.contactPhone = contactPhone;
     if (contactEmail) updateFields.contactEmail = contactEmail;
     if (websiteUrl) updateFields.websiteUrl = websiteUrl;
@@ -131,4 +133,138 @@ router.put("/my-profile", hospitalAdminAuth, async (req, res) => {
   }
 });
 
+// MANAGE DOCTORS ROUTES
+router.get("/my-doctors", hospitalAdminAuth, async (req, res) => {
+  try {
+    const hospitalId = req.hospitalId;
+    const doctors = await Doctor.find({ hospital: hospitalId });
+    res.json(doctors);
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+router.post("/my-doctors", hospitalAdminAuth, async (req, res) => {
+  const { name, speciality, profileImage } = req.body;
+  const hospitalId = req.hospitalId;
+  if (!name || !speciality) {
+    return res.status(400).json({
+      msg: "Name and Speciality are required Fields",
+    });
+  }
+  try {
+    const existingDoctor = await Doctor.findOne({
+      name: name,
+      hospital: hospitalId,
+    });
+    if (existingDoctor) {
+      return res.status(400).json({
+        msg: "A doctor with this name already exists in your hospital.",
+      });
+    }
+    const newDoctor = new Doctor({
+      name,
+      specialty: speciality,
+      profileImage: profileImage || "",
+      hospital: hospitalId,
+    });
+    await newDoctor.save();
+    res.status(201).json(newDoctor);
+  } catch (error) {
+    console.error("Error adding new doctor:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+//Basic Doctor Details Update
+router.put("/doctors/:doctorId", hospitalAdminAuth, async (req, res) => {
+  const { name, speciality, profileImage } = req.body;
+  const hospitalId = req.hospitalId;
+  try {
+    let doctor = await Doctor.findById(req.params.doctorId);
+    if (!doctor) {
+      return res.status(404).json({
+        msg: "Doctor not found",
+      });
+    }
+    if (doctor.hospital.toString() !== hospitalId) {
+      return res.status(403).json({
+        msg: "Unauthorized to update this doctor",
+      });
+    }
+
+    const updateFields = {};
+    if (name) updateFields.name = name;
+    if (speciality) updateFields.specialty = speciality;
+    if (profileImage) updateFields.profileImage = profileImage;
+
+    doctor = await Doctor.findByIdAndUpdate(
+      req.params.doctorId,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
+    res.json(doctor);
+  } catch (error) {
+    console.error("Error updating doctor:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+//DELETE DOCTOR ROUTE;
+router.delete("/doctors/:doctorId", hospitalAdminAuth, async (req, res) => {
+  const hospitalId = req.hospitalId;
+  try {
+    const doctor = await Doctor.findById(req.params.doctorId);
+    if (!doctor) {
+      return res.status(404).json({
+        msg: "Doctor not found",
+      });
+    }
+    if (doctor.hospital.toString() !== hospitalId) {
+      return res.status(403).json({
+        msg: "Unauthorized to update this doctor",
+      });
+    }
+    await Doctor.findByIdAndDelete(req.params.doctorId);
+    res.json({ msg: "Doctor deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting doctor:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// Doctor Schedule Update
+router.put(
+  "/doctors/:doctorId/schedule",
+  hospitalAdminAuth,
+  async (req, res) => {
+    const newSchedule = req.body.schedule;
+    const hospitalId = req.hospitalId; // From middleware
+
+    if (!newSchedule || typeof newSchedule !== "object") {
+      return res.status(400).json({ msg: "Invalid schedule data provided." });
+    }
+    // Add more validation here (e.g., check time formats, duration validity) if needed
+
+    try {
+      let doctor = await Doctor.findById(req.params.doctorId);
+      if (!doctor) return res.status(404).json({ msg: "Doctor not found" });
+
+      if (doctor.hospital.toString() !== hospitalId.toString()) {
+        return res
+          .status(401)
+          .json({ msg: "Not authorized to modify this doctor's schedule" });
+      }
+
+      doctor.schedule = newSchedule;
+      await doctor.save();
+
+      res.json(doctor);
+    } catch (error) {
+      console.error("Error updating doctor schedule:", error);
+      res.status(500).send("Server Error");
+    }
+  }
+);
 module.exports = router;

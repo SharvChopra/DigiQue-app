@@ -1,4 +1,3 @@
-/* Add/Merge these styles into HospitalAdmin.css */
 
 .hospital-profile-page .page-title {
   font-size: 2.1rem;
@@ -36,11 +35,9 @@
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px 25px; /* Row and column gap */
 }
-/* Utility class to make an item span 2 columns */
 .grid-span-2 {
   grid-column: span 2;
 }
-/* Adjust grid span for smaller screens if needed */
 @media (max-width: 768px) {
   .grid-span-2 {
     grid-column: span 1;
@@ -252,4 +249,169 @@
   font-size: 16px;
   line-height: 1;
   padding: 0;
+}
+
+/* Doctor Page Styles */
+
+.manage-doctors-page .page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.manage-doctors-page .page-subtitle {
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-doctor-section {
+  margin-bottom: 30px;
+  text-align: right; /* Position button to the right */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.add-doctor-btn {
+  padding: 10px 20px;
+  background-color: #198754; /* Bootstrap success green */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-doctor-btn:hover {
+  background-color: #157347; /* Darker green on hover */
+}
+
+/* .doctors-list-container {
+  /* This container holds the list items */
+
+
+/* Styling for each individual doctor row in the list */
+.doctor-list-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* Avatar | Info | Actions */
+  align-items: center;
+  gap: 20px; /* Spacing between columns */
+  background-color: #fff;
+  padding: 15px 25px; /* Padding inside the row */
+  border-radius: 8px;
+  margin-bottom: 15px; /* Space between rows */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e9ecef;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.doctor-list-avatar img {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%; /* Make it circular */
+  object-fit: cover; /* Ensure image covers the area */
+
+}
+
+.doctor-list-details h5 {
+  margin: 0 0 5px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #333;
+}
+
+.doctor-list-details p {
+  margin: 0;
+  font-size: 14px;
+  color: #6c757d; /* Muted color for specialty */
+}
+
+/* Container for the action buttons */
+.doctor-list-actions {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.doctor-list-actions button {
+  padding: 7px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #ffffff; /* White background */
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap; /* Prevent button text wrapping */
+  font-weight: 500;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Specific button styles */
+.doctor-list-actions .schedule-btn {
+  color: #0d6efd; /* Blue */
+  border-color: #cfe2ff;
+}
+.doctor-list-actions .schedule-btn:hover {
+  background-color: #e7f1ff;
+}
+
+.doctor-list-actions .edit-btn {
+  color: #6f42c1; /* Purple */
+  border-color: #e9dff7;
+}
+.doctor-list-actions .edit-btn:hover {
+  background-color: #f1eafa;
+}
+
+.doctor-list-actions .delete-btn {
+  color: #dc3545; /* Red */
+  border-color: #f8d7da;
+}
+.doctor-list-actions .delete-btn:hover {
+  background-color: #f8d7da;
+}
+
+/* Placeholder styles for modals (Add more detailed styles when building them) */
+/* You might reuse styles from BookingModal.css by importing it */
+.doctor-modal .form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-top: 20px;
+}
+.doctor-modal .form-group label {
+    display: block; font-weight: 500; margin-bottom: 6px; font-size: 14px; color: #555;
+}
+.doctor-modal .form-group input {
+    width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 15px;
+}
+/* Ensure you have .modal-overlay, .modal-content, .modal-actions, .cancel-btn, .confirm-btn styles available */
+
+.schedule-editor-modal .day-row {
+  display: grid;
+  grid-template-columns: 100px auto auto auto;
+  align-items: center;
+  gap: 15px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+.schedule-editor-modal .day-label { font-weight: 600; }
+.schedule-editor-modal input[type="time"], .schedule-editor-modal input[type="number"] {
+    padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+}
+.schedule-editor-modal .form-group { margin-top: 20px; }
+
+/* Style for empty list message */
+.profile-card { /* Reusing profile card style for consistency */
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  margin-bottom: 30px;
+  border: 1px solid #e9ecef;
+  text-align: center; /* Center the empty message */
+  color: #6c757d;
 }

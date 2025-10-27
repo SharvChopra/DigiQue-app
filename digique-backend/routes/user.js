@@ -1,17 +1,15 @@
 const express = require("express");
-const authMiddleware = require("../middleware/auth.js"); // Ensure this path is correct
-const User = require("../models/User.js"); // Ensure this path is correct
-const UpdateHistory = require("../models/History.js"); // <<< CORRECTED IMPORT PATH
+const authMiddleware = require("../middleware/auth.js"); 
+const User = require("../models/User.js"); 
+const UpdateHistory = require("../models/History.js"); 
 const router = express.Router();
 
 const formatFieldName = (key) => {
-  // Basic formatting, assumes camelCase
   return key
     .replace(/([A-Z])/g, " $1")
     .replace(/^./, (str) => str.toUpperCase());
 };
 
-// --- GET /api/users/me ---
 router.get("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -20,12 +18,11 @@ router.get("/me", authMiddleware, async (req, res) => {
     }
     res.json(user);
   } catch (error) {
-    console.error("Error fetching user /me:", error); // Added logging
+    console.error("Error fetching user /me:", error); 
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-// --- PUT /api/users/me ---
 router.put("/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -113,14 +110,12 @@ router.put("/me", authMiddleware, async (req, res) => {
 
 router.get("/me/history", authMiddleware, async (req, res) => {
   try {
-    // Find history for the user and apply sorting directly in the query
     const history = await UpdateHistory.find({ user: req.user.id }).sort({
       createdAt: -1,
-    }); // <<< CORRECTED SORTING METHOD
+    }); 
 
     res.json(history);
   } catch (error) {
-    // <<< ADDED ERROR LOGGING HERE
     console.error("Error fetching update history:", error);
     res.status(500).send("Server Error");
   }

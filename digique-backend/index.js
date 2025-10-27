@@ -3,9 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const uploadRoutes = require("./routes/uploadRoutes"); // <-- Import
+const uploadRoutes = require("./routes/uploadRoutes");
 
-// ... all your other routes ...
+// ... all routes ...
 
 const app = express();
 const PORT = process.env.PORT || 8000;

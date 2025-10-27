@@ -2,10 +2,10 @@ import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import "./HospitalAdmin.css"; // Assuming this is your CSS file
+import "./HospitalAdmin.css";
 
 const HospitalProfile = () => {
-  const { token, refetchUser } = useAuth(); // Import refetchUser to update context after save
+  const { token, refetchUser } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     street: "",
@@ -13,7 +13,7 @@ const HospitalProfile = () => {
     state: "",
     zipCode: "",
     location: "",
-    logoUrl: "",
+    bannerImage: "", // UPDATED: Was logoUrl
     contactPhone: "",
     contactEmail: "",
     websiteUrl: "",
@@ -24,8 +24,8 @@ const HospitalProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serviceInput, setServiceInput] = useState("");
-  const [isEditing, setIsEditing] = useState(false); // New state for edit mode
-  const [selectedLogoFile, setSelectedLogoFile] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedBannerFile, setSelectedBannerFile] = useState(null); // UPDATED: Was selectedLogoFile
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
@@ -43,7 +43,7 @@ const HospitalProfile = () => {
       const street = addressParts[0]?.trim() || "";
       const cityStateZip = addressParts.slice(1).join(",").trim();
       const city = data.location || cityStateZip.split(" ")[0] || "";
-      const state = ""; // Your current logic for state/zip is rudimentary, consider improving
+      const state = "";
       const zipCode = "";
 
       const initialFormData = {
@@ -53,7 +53,7 @@ const HospitalProfile = () => {
         state: state,
         zipCode: zipCode,
         location: data.location || city,
-        logoUrl: data.logoUrl || "",
+        bannerImage: data.bannerImage || data.logoUrl || "", // UPDATED: Prioritizes bannerImage, falls back to logoUrl
         contactPhone: data.contactPhone || "",
         contactEmail: data.contactEmail || "",
         websiteUrl: data.websiteUrl || "",
@@ -83,6 +83,7 @@ const HospitalProfile = () => {
   };
 
   const handleAddService = (e) => {
+    // ... (no change here)
     if (e.key === "Enter" && serviceInput.trim()) {
       e.preventDefault();
       const newService = serviceInput.trim();
@@ -97,6 +98,7 @@ const HospitalProfile = () => {
   };
 
   const handleRemoveService = (serviceToRemove) => {
+    // ... (no change here)
     setFormData((prev) => ({
       ...prev,
       services: prev.services.filter((s) => s !== serviceToRemove),
@@ -105,21 +107,21 @@ const HospitalProfile = () => {
 
   const handleCancel = () => {
     if (originalData) {
-      setFormData(originalData); // Reset form to initially loaded data
+      setFormData(originalData);
     }
     setIsEditing(false); // Exit edit mode
   };
 
-  // In HospitalProfile.js
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      let newLogoUrl = formData.logoUrl; // Start with the current URL
+      let newBannerUrl = formData.bannerImage; // UPDATED: Was newLogoUrl
 
-      if (selectedLogoFile) {
-        const uploadFormData = new FormData();
-        uploadFormData.append("logo", selectedLogoFile); // 'logo' matches backend route
+      if (selectedBannerFile) {
+        // UPDATED: Was selectedLogoFile
+        const uploadFormData = new FormData(); // IMPORTANT: The key "logo" here must match your *existing* backend route // Even though we call it a banner, the API route expects 'logo'
+        uploadFormData.append("logo", selectedBannerFile); // UPDATED: Use selectedBannerFile // IMPORTANT: This route is the *same* as before, as you requested
 
         const uploadResponse = await fetch(`${apiURL}/upload/hospital-logo`, {
           method: "POST",
@@ -130,11 +132,11 @@ const HospitalProfile = () => {
         });
 
         if (!uploadResponse.ok) {
-          throw new Error("Failed to upload logo image");
+          throw new Error("Failed to upload banner image"); // UPDATED: Error message
         }
 
         const uploadResult = await uploadResponse.json();
-        newLogoUrl = uploadResult.imageUrl; // Get the new URL from the backend
+        newBannerUrl = uploadResult.imageUrl; // UPDATED: Was newLogoUrl
       }
 
       const fullAddress =
@@ -146,7 +148,8 @@ const HospitalProfile = () => {
         name: formData.name,
         address: fullAddress,
         location: formData.city || formData.location,
-        logoUrl: newLogoUrl, // <-- Use the correct URL
+        bannerImage: newBannerUrl, // UPDATED: Was logoUrl
+        logoUrl: newBannerUrl, // UPDATED: Sending to both fields
         contactPhone: formData.contactPhone,
         contactEmail: formData.contactEmail,
         websiteUrl: formData.websiteUrl,
@@ -154,7 +157,6 @@ const HospitalProfile = () => {
         services: formData.services,
       };
 
-      // 3. --- Save the Profile ---
       const response = await fetch(`${apiURL}/hospital/my-profile`, {
         method: "PUT",
         headers: {
@@ -169,23 +171,25 @@ const HospitalProfile = () => {
         throw new Error(errorData.msg || "Failed to update profile");
       }
 
-      // 4. --- Success ---
       const updatedData = await response.json();
 
-      // Update originalData to match the new saved data
       setOriginalData({
         ...formData,
-        logoUrl: newLogoUrl, // Make sure original data has new logo URL
+        bannerImage: newBannerUrl, // UPDATED
+        logoUrl: newBannerUrl, // UPDATED
         address: fullAddress,
         location: payload.location,
       });
 
-      setFormData((prev) => ({ ...prev, logoUrl: newLogoUrl })); // Ensure form shows saved URL
-      setSelectedLogoFile(null); // Clear the selected file
+      setFormData((prev) => ({
+        ...prev,
+        bannerImage: newBannerUrl,
+        logoUrl: newBannerUrl,
+      }));
+      setSelectedBannerFile(null);
 
-      // refetchUser(); // Uncomment if you have this from AuthContext
       toast.success("Hospital profile updated successfully!");
-      setIsEditing(false); // Exit edit mode
+      setIsEditing(false);
     } catch (err) {
       toast.error(err.message || "Update failed.");
     }
@@ -194,23 +198,21 @@ const HospitalProfile = () => {
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setSelectedLogoFile(file); // Save the file object
+      setSelectedBannerFile(file); // UPDATED: Was setSelectedLogoFile
 
-      setFormData((prev) => ({ ...prev, logoUrl: URL.createObjectURL(file) }));
+      setFormData((prev) => ({
+        ...prev,
+        bannerImage: URL.createObjectURL(file), // UPDATED: Was logoUrl
+      }));
     }
   };
-
-  if (loading) return <div className="loading-message">Loading profile...</div>;
-  if (error)
-    return <p className="error-message">Error loading profile: {error}</p>;
 
   return (
     <div className="hospital-profile-page">
       <div className="page-header">
         {" "}
-        {/* Added a div for header and button */}
         <h2 className="page-title">Hospital Profile</h2>
-        {!isEditing && ( // Show Edit button only when not editing
+        {!isEditing && (
           <button
             className="edit-profile-btn"
             onClick={() => setIsEditing(true)}
@@ -224,7 +226,6 @@ const HospitalProfile = () => {
       </p>
 
       <form onSubmit={handleSubmit}>
-        {/* Basic Information Card */}
         <div className="profile-card">
           <h4>Basic Information</h4>
           <div className="profile-form-grid">
@@ -243,38 +244,45 @@ const HospitalProfile = () => {
               )}
             </div>
             <div className="form-group grid-span-2">
-              <label>Hospital Logo</label>
+              <label>Hospital Banner Image</label>{" "}
               {isEditing ? (
                 <>
                   <input
-                    type="file" // <-- Change this
-                    id="logoFile"
-                    name="logoFile"
-                    accept="image/*" // <-- Add this
-                    onChange={handleFileChange} // <-- Add this
-                  />
-                  {formData.logoUrl && (
+                    type="file"
+                    id="bannerFile"
+                    name="bannerFile"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                  />{" "}
+                  {formData.bannerImage && (
                     <img
-                      src={formData.logoUrl}
-                      alt="Logo Preview"
-                      className="hospital-logo-preview"
-                      style={{ marginTop: "10px" }}
+                      src={formData.bannerImage}
+                      alt="Banner Preview"
+                      className="hospital-banner-preview"
+                      style={{
+                        marginTop: "10px",
+                        width: "100%",
+                        objectFit: "cover",
+                      }}
                     />
-                  )}
+                  )}{" "}
                 </>
               ) : (
-                <div className="logo-display">
-                  {formData.logoUrl ? (
+                <div className="banner-display">
+                  {" "}
+                  {formData.bannerImage ? (
                     <img
-                      src={formData.logoUrl}
-                      alt="Hospital Logo"
-                      className="hospital-logo-preview"
+                      src={formData.bannerImage}
+                      alt="Hospital Banner"
+                      className="hospital-banner-preview"
+                      style={{ width: "100%", objectFit: "cover" }}
+                      _
                     />
                   ) : (
-                    <p className="read-only-field">No logo uploaded</p>
-                  )}
+                    <p className="read-only-field">No banner uploaded</p>
+                  )}{" "}
                 </div>
-              )}
+              )}{" "}
             </div>
             <div className="form-group grid-span-2">
               <label htmlFor="street">Street Address</label>
@@ -335,7 +343,6 @@ const HospitalProfile = () => {
           </div>
         </div>
 
-        {/* Contact Details Card */}
         <div className="profile-card">
           <h4>Contact Details</h4>
           <div className="profile-form-grid">
@@ -420,7 +427,6 @@ const HospitalProfile = () => {
           </div>
         </div>
 
-        {/* Services Card */}
         <div className="profile-card">
           <h4>Services Offered</h4>
           <div className="form-group">
@@ -460,7 +466,7 @@ const HospitalProfile = () => {
           </div>
         </div>
 
-        {isEditing && ( // Show action buttons only when editing
+        {isEditing && (
           <div className="profile-actions">
             <button type="button" className="cancel-btn" onClick={handleCancel}>
               Cancel
