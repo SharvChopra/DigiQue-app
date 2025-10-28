@@ -234,18 +234,17 @@ router.delete("/doctors/:doctorId", hospitalAdminAuth, async (req, res) => {
   }
 });
 
-// Doctor Schedule Update
+//Adding Schedule Update Route
 router.put(
   "/doctors/:doctorId/schedule",
   hospitalAdminAuth,
   async (req, res) => {
     const newSchedule = req.body.schedule;
-    const hospitalId = req.hospitalId; // From middleware
+    const hospitalId = req.hospitalId; 
 
     if (!newSchedule || typeof newSchedule !== "object") {
       return res.status(400).json({ msg: "Invalid schedule data provided." });
     }
-    // Add more validation here (e.g., check time formats, duration validity) if needed
 
     try {
       let doctor = await Doctor.findById(req.params.doctorId);
@@ -267,4 +266,7 @@ router.put(
     }
   }
 );
+
+//Fetching the Appointments in the Admin Dashboard
+
 module.exports = router;

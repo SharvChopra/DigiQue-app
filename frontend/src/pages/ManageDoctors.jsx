@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import AddEditDoctorModal from "../components/AddEditDoctorModal";
 // import ScheduleEditorModal from '../components/ScheduleEditorModal';
 import "./HospitalAdmin.css"; // Use shared admin styles
+import ScheduleEditorModal from "../components/ScheduleEditorModal";
 
 export default function ManageDoctors() {
   const { token } = useAuth();
@@ -60,8 +61,8 @@ export default function ManageDoctors() {
 
   const handleOpenScheduleModal = (doctor) => {
     setSelectedDoctor(doctor); // Set the doctor whose schedule to edit
-    // setIsScheduleModalOpen(true); // Uncomment when Schedule Modal is ready
-    toast.info(`Schedule editing for Dr. ${doctor.name} coming soon!`); // Placeholder action
+    setIsScheduleModalOpen(true); // Uncomment when Schedule Modal is ready
+    // toast.info(`Schedule editing for Dr. ${doctor.name} coming soon!`); // Placeholder action
   };
 
   const handleCloseModals = () => {
@@ -91,7 +92,6 @@ export default function ManageDoctors() {
         throw new Error(errorData.msg || "Failed to delete doctor");
       }
       toast.success(`Dr. ${doctorName} removed successfully.`);
-      // Refresh list by filtering locally (more efficient than re-fetching)
       setDoctors((prevDoctors) =>
         prevDoctors.filter((doc) => doc._id !== doctorId)
       );
@@ -204,12 +204,12 @@ export default function ManageDoctors() {
         }}
         doctor={selectedDoctor}
       />
-      {/* <ScheduleEditorModal
+      <ScheduleEditorModal
         isOpen={isScheduleModalOpen}
         onClose={handleCloseModals}
         onSaveSuccess={handleCloseModals}
         doctor={selectedDoctor}
-      /> */}
+      />
     </div>
   );
 }

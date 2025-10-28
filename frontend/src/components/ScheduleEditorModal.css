@@ -1,0 +1,209 @@
+.modal-content.schedule-modal {
+  width: 100%;
+  max-width: 580px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-content.schedule-modal .heading {
+  font-size: 26px;
+  margin-bottom: 0;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  padding: 30px 30px 25px 30px;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.modal-close-button {
+  top: 15px;
+  right: 15px;
+  font-size: 28px;
+  color: #888;
+}
+.modal-close-button:hover {
+  color: #333;
+  background-color: transparent;
+}
+
+.schedule-editor {
+  width: 100%;
+  margin-top: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 20px 30px 30px 30px;
+  box-sizing: border-box;
+}
+
+.day-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 15px;
+  border-bottom: 1px solid #e0e0e0;
+  transition: background-color 0.2s ease;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+
+.day-row:last-of-type {
+  border-bottom: none;
+}
+
+.day-row:hover {
+  background-color: #f5f5f5;
+}
+
+.day-toggle {
+  display: flex;
+  align-items: center;
+  flex-basis: 180px;
+}
+
+.day-toggle input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 15px;
+  accent-color: #007bff;
+  cursor: pointer;
+}
+
+.day-toggle label {
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+}
+
+.time-inputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.time-inputs span {
+  font-size: 15px;
+  color: #555;
+  font-weight: 400;
+}
+
+.time-inputs input[type="time"] {
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  color: #333;
+  width: 100px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.time-inputs input[type="time"]:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.time-inputs input[type="time"]:disabled {
+  background-color: #f0f0f0;
+  color: #999;
+  cursor: not-allowed;
+}
+.day-row {
+  margin: 3px;
+  width: auto;
+}
+.day-row.duration-row {
+  margin-top: 20px;
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.day-row.duration-row label {
+  font-weight: 600;
+  font-size: 17px;
+  color: #333;
+  margin-right: 20px;
+}
+
+.duration-input {
+  width: 90px;
+  padding: 10px 12px;
+  font-size: 16px;
+  text-align: center;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  color: #333;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.duration-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 0;
+  flex-shrink: 0;
+  padding: 20px 30px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f9f9f9;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.modal-actions .cancel-btn,
+.modal-actions .confirm-btn {
+  padding: 12px 25px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.modal-actions .cancel-btn {
+  background-color: #e9ecef;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.modal-actions .cancel-btn:hover:not(:disabled) {
+  background-color: #dee2e6;
+  border-color: #ced4da;
+  color: #343a40;
+}
+
+.modal-actions .confirm-btn {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
+.modal-actions .confirm-btn:hover:not(:disabled) {
+  background-color: #0056b3;
+  border-color: #004a99;
+}
+
+.modal-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
