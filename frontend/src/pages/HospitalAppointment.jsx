@@ -26,11 +26,10 @@ export default function HospitalAppointments() {
   // Filters
   const [filterDate, setFilterDate] = useState(formatDateForInput(new Date())); // Default to today
   const [filterDoctor, setFilterDoctor] = useState("");
-  const [filterStatus, setFilterStatus] = useState("Scheduled"); 
+  const [filterStatus, setFilterStatus] = useState("Scheduled");
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
-  // Fetch Doctors for filter dropdown
   const fetchDoctors = useCallback(async () => {
     if (!token) return;
     try {
@@ -43,7 +42,6 @@ export default function HospitalAppointments() {
     }
   }, [token, apiURL]);
 
-  // Fetch Appointments based on filters
   const fetchAppointments = useCallback(async () => {
     if (!token) {
       setLoading(false);
@@ -74,7 +72,6 @@ export default function HospitalAppointments() {
     }
   }, [token, apiURL, filterDate, filterDoctor, filterStatus]);
 
-  // Initial data load
   useEffect(() => {
     fetchDoctors();
   }, [fetchDoctors]);
@@ -83,7 +80,6 @@ export default function HospitalAppointments() {
     fetchAppointments(); // Fetch appointments on load and when filters change
   }, [fetchAppointments]);
 
-  // --- Your Handler Function for Updating Status ---
   const handleUpdateStatus = async (appointmentId, newStatus) => {
     if (
       !window.confirm(
@@ -111,7 +107,6 @@ export default function HospitalAppointments() {
         throw new Error(updatedAppointment.msg || "Failed to update status");
       }
 
-      // Update state locally for instant UI change
       setAppointments((prevAppointments) =>
         prevAppointments.map((app) =>
           app._id === appointmentId ? updatedAppointment : app
@@ -130,7 +125,6 @@ export default function HospitalAppointments() {
     }
   };
 
-  // --- JSX ---
   return (
     <div className="hospital-appointments-page">
       <h2 className="page-title-h1">Appointments</h2>
@@ -229,7 +223,6 @@ export default function HospitalAppointments() {
                         {appt.status || "Scheduled"}
                       </span>
                     </td>
-                    {/* --- Actions Cell --- */}
                     <td className="appointment-actions">
                       {appt.status === "Scheduled" ? (
                         <>

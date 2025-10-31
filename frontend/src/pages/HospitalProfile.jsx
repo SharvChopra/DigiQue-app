@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "./HospitalAdmin.css";
 
 const HospitalProfile = () => {
-  const { token, refetchUser } = useAuth();
+  const { token } = useAuth(); // Removed refetchUser, not needed here
   const [formData, setFormData] = useState({
     name: "",
     street: "",
@@ -13,7 +13,8 @@ const HospitalProfile = () => {
     state: "",
     zipCode: "",
     location: "",
-    bannerImage: "", // UPDATED: Was logoUrl
+    bannerImage: "", // URL for the wide banner
+    logoUrl: "", // URL for the square logo
     contactPhone: "",
     contactEmail: "",
     websiteUrl: "",
@@ -24,9 +25,7 @@ const HospitalProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serviceInput, setServiceInput] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [selectedBannerFile, setSelectedBannerFile] = useState(null); // UPDATED: Was selectedLogoFile
-
+  const [isEditing, setIsEditing] = useState(false); // We no longer need 'selectedBannerFile'
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
   const fetchProfile = useCallback(async () => {
@@ -37,23 +36,18 @@ const HospitalProfile = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch hospital profile");
-      const data = await response.json();
+      const data = await response.json(); // Simplified address parsing (assuming you'll fill it out properly now)
 
-      const addressParts = (data.address || "").split(",");
-      const street = addressParts[0]?.trim() || "";
-      const cityStateZip = addressParts.slice(1).join(",").trim();
-      const city = data.location || cityStateZip.split(" ")[0] || "";
-      const state = "";
-      const zipCode = "";
-
+      const addressParts = (data.address || ",,,").split(",");
       const initialFormData = {
         name: data.name || "",
-        street: street,
-        city: city,
-        state: state,
-        zipCode: zipCode,
-        location: data.location || city,
-        bannerImage: data.bannerImage || data.logoUrl || "", // UPDATED: Prioritizes bannerImage, falls back to logoUrl
+        street: addressParts[0]?.trim() || "",
+        city: addressParts[1]?.trim() || data.location || "",
+        state: addressParts[2]?.trim() || "",
+        zipCode: addressParts[3]?.trim() || "",
+        location: data.location || addressParts[1]?.trim() || "",
+        bannerImage: data.bannerImage || "", // Explicitly load bannerImage
+        logoUrl: data.logoUrl || "", // Explicitly load logoUrl
         contactPhone: data.contactPhone || "",
         contactEmail: data.contactEmail || "",
         websiteUrl: data.websiteUrl || "",
@@ -76,14 +70,12 @@ const HospitalProfile = () => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  }; // --- NO CHANGE to service handlers ---
 
   const handleServiceInputChange = (e) => {
     setServiceInput(e.target.value);
   };
-
   const handleAddService = (e) => {
-    // ... (no change here)
     if (e.key === "Enter" && serviceInput.trim()) {
       e.preventDefault();
       const newService = serviceInput.trim();
@@ -96,60 +88,34 @@ const HospitalProfile = () => {
       setServiceInput("");
     }
   };
-
   const handleRemoveService = (serviceToRemove) => {
-    // ... (no change here)
     setFormData((prev) => ({
       ...prev,
       services: prev.services.filter((s) => s !== serviceToRemove),
     }));
-  };
-
+  }; // --- END of service handlers ---
   const handleCancel = () => {
     if (originalData) {
       setFormData(originalData);
     }
-    setIsEditing(false); // Exit edit mode
+    setIsEditing(false);
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // --- REMOVED: All file upload logic ---
 
     try {
-      let newBannerUrl = formData.bannerImage; // UPDATED: Was newLogoUrl
-
-      if (selectedBannerFile) {
-        // UPDATED: Was selectedLogoFile
-        const uploadFormData = new FormData(); // IMPORTANT: The key "logo" here must match your *existing* backend route // Even though we call it a banner, the API route expects 'logo'
-        uploadFormData.append("logo", selectedBannerFile); // UPDATED: Use selectedBannerFile // IMPORTANT: This route is the *same* as before, as you requested
-
-        const uploadResponse = await fetch(`${apiURL}/upload/hospital-logo`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          body: uploadFormData,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error("Failed to upload banner image"); // UPDATED: Error message
-        }
-
-        const uploadResult = await uploadResponse.json();
-        newBannerUrl = uploadResult.imageUrl; // UPDATED: Was newLogoUrl
-      }
-
       const fullAddress =
-        `${formData.street}, ${formData.city}, ${formData.state} ${formData.zipCode}`
-          .replace(/ ,|, $/g, "")
+        `${formData.street}, ${formData.city}, ${formData.state}, ${formData.zipCode}`
+          .replace(/ ,|, $/g, "") // Clean up trailing/empty commas
           .trim();
 
       const payload = {
         name: formData.name,
         address: fullAddress,
         location: formData.city || formData.location,
-        bannerImage: newBannerUrl, // UPDATED: Was logoUrl
-        logoUrl: newBannerUrl, // UPDATED: Sending to both fields
+        bannerImage: formData.bannerImage, // Send the URL string
+        logoUrl: formData.logoUrl, // Send the URL string
         contactPhone: formData.contactPhone,
         contactEmail: formData.contactEmail,
         websiteUrl: formData.websiteUrl,
@@ -171,66 +137,52 @@ const HospitalProfile = () => {
         throw new Error(errorData.msg || "Failed to update profile");
       }
 
-      const updatedData = await response.json();
+      const updatedData = await response.json(); // Update local state to match the saved data
 
-      setOriginalData({
+      const savedData = {
         ...formData,
-        bannerImage: newBannerUrl, // UPDATED
-        logoUrl: newBannerUrl, // UPDATED
-        address: fullAddress,
+        address: fullAddress, // This isn't returned, so we use the payload
         location: payload.location,
-      });
-
-      setFormData((prev) => ({
-        ...prev,
-        bannerImage: newBannerUrl,
-        logoUrl: newBannerUrl,
-      }));
-      setSelectedBannerFile(null);
+      };
+      setFormData(savedData);
+      setOriginalData(savedData);
 
       toast.success("Hospital profile updated successfully!");
       setIsEditing(false);
     } catch (err) {
       toast.error(err.message || "Update failed.");
     }
-  };
-
-  const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedBannerFile(file); // UPDATED: Was setSelectedLogoFile
-
-      setFormData((prev) => ({
-        ...prev,
-        bannerImage: URL.createObjectURL(file), // UPDATED: Was logoUrl
-      }));
-    }
-  };
+  }; // --- REMOVED: handleFileChange ---
 
   return (
     <div className="hospital-profile-page">
+            {/* ... (no change to header) ... */}     {" "}
       <div className="page-header">
-        {" "}
-        <h2 className="page-title">Hospital Profile</h2>
+                <h2 className="page-title">Hospital Profile</h2>       {" "}
         {!isEditing && (
           <button
             className="edit-profile-btn"
             onClick={() => setIsEditing(true)}
           >
-            Edit Profile
+                        Edit Profile          {" "}
           </button>
         )}
+             {" "}
       </div>
+           {" "}
       <p className="page-subtitle">
-        Manage and update the hospital's general information.
+                Manage and update the hospital's general information.      {" "}
       </p>
-
+           {" "}
       <form onSubmit={handleSubmit}>
+               {" "}
         <div className="profile-card">
-          <h4>Basic Information</h4>
+                    <h4>Basic Information</h4>         {" "}
           <div className="profile-form-grid">
+                        {/* ... (no change to name) ... */}           {" "}
             <div className="form-group grid-span-2">
-              <label htmlFor="name">Hospital Name</label>
+                            <label htmlFor="name">Hospital Name</label>         
+                 {" "}
               {isEditing ? (
                 <input
                   id="name"
@@ -242,50 +194,85 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.name || "N/A"}</p>
               )}
+                         {" "}
             </div>
+                        {/* --- UPDATED IMAGE SECTION --- */}           {" "}
             <div className="form-group grid-span-2">
-              <label>Hospital Banner Image</label>{" "}
+                           {" "}
+              <label htmlFor="bannerImage">
+                Hospital Banner URL (Wide Image)
+              </label>
+                           {" "}
               {isEditing ? (
-                <>
-                  <input
-                    type="file"
-                    id="bannerFile"
-                    name="bannerFile"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />{" "}
-                  {formData.bannerImage && (
-                    <img
-                      src={formData.bannerImage}
-                      alt="Banner Preview"
-                      className="hospital-banner-preview"
-                      style={{
-                        marginTop: "10px",
-                        width: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                  )}{" "}
-                </>
+                <input
+                  type="text"
+                  id="bannerImage"
+                  name="bannerImage"
+                  value={formData.bannerImage}
+                  onChange={handleInputChange}
+                  placeholder="https://.../my-banner-image.jpg"
+                />
               ) : (
-                <div className="banner-display">
-                  {" "}
-                  {formData.bannerImage ? (
-                    <img
-                      src={formData.bannerImage}
-                      alt="Hospital Banner"
-                      className="hospital-banner-preview"
-                      style={{ width: "100%", objectFit: "cover" }}
-                      _
-                    />
-                  ) : (
-                    <p className="read-only-field">No banner uploaded</p>
-                  )}{" "}
-                </div>
-              )}{" "}
+                <p className="read-only-field">
+                  {formData.bannerImage || "N/A"}
+                </p>
+              )}
+                           {" "}
+              {formData.bannerImage && (
+                <img
+                  src={formData.bannerImage}
+                  alt="Banner Preview"
+                  className="hospital-banner-preview"
+                  style={{
+                    marginTop: "10px",
+                    width: "100%",
+                    maxHeight: "200px",
+                    objectFit: "cover",
+                  }}
+                  onError={(e) => (e.target.style.display = "none")} // Hide if URL is broken
+                  onLoad={(e) => (e.target.style.display = "block")}
+                />
+              )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group grid-span-2">
-              <label htmlFor="street">Street Address</label>
+                           {" "}
+              <label htmlFor="logoUrl">Hospital Logo URL (Square Image)</label> 
+                       {" "}
+              {isEditing ? (
+                <input
+                  type="text"
+                  id="logoUrl"
+                  name="logoUrl"
+                  value={formData.logoUrl}
+                  onChange={handleInputChange}
+                  placeholder="https://.../my-logo-image.png"
+                />
+              ) : (
+                <p className="read-only-field">{formData.logoUrl || "N/A"}</p>
+              )}
+                           {" "}
+              {formData.logoUrl && (
+                <img
+                  src={formData.logoUrl}
+                  alt="Logo Preview"
+                  style={{
+                    marginTop: "10px",
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "contain",
+                  }}
+                  onError={(e) => (e.target.style.display = "none")} // Hide if URL is broken
+                  onLoad={(e) => (e.target.style.display = "block")}
+                />
+              )}
+                         {" "}
+            </div>
+                        {/* --- END OF UPDATED SECTION --- */}           {" "}
+            <div className="form-group grid-span-2">
+                            <label htmlFor="street">Street Address</label>     
+                     {" "}
               {isEditing ? (
                 <input
                   id="street"
@@ -297,9 +284,11 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.street || "N/A"}</p>
               )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group">
-              <label htmlFor="city">City</label>
+                            <label htmlFor="city">City</label>             {" "}
               {isEditing ? (
                 <input
                   id="city"
@@ -311,9 +300,12 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.city || "N/A"}</p>
               )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group">
-              <label htmlFor="state">State / Province</label>
+                            <label htmlFor="state">State / Province</label>     
+                     {" "}
               {isEditing ? (
                 <input
                   id="state"
@@ -325,9 +317,12 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.state || "N/A"}</p>
               )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group">
-              <label htmlFor="zipCode">ZIP / Postal Code</label>
+                            <label htmlFor="zipCode">ZIP / Postal Code</label> 
+                       {" "}
               {isEditing ? (
                 <input
                   id="zipCode"
@@ -339,15 +334,23 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.zipCode || "N/A"}</p>
               )}
+                         {" "}
             </div>
+                     {" "}
           </div>
+                 {" "}
         </div>
-
+               {" "}
+        {/* ... (no change to Contact, About, Services, or Action buttons) ... */}
+               {" "}
         <div className="profile-card">
-          <h4>Contact Details</h4>
+                    <h4>Contact Details</h4>         {" "}
           <div className="profile-form-grid">
+                       {" "}
             <div className="form-group">
-              <label htmlFor="contactPhone">Main Phone Number</label>
+                           {" "}
+              <label htmlFor="contactPhone">Main Phone Number</label>           
+               {" "}
               {isEditing ? (
                 <input
                   id="contactPhone"
@@ -361,9 +364,13 @@ const HospitalProfile = () => {
                   {formData.contactPhone || "N/A"}
                 </p>
               )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group">
-              <label htmlFor="contactEmail">General Inquiries Email</label>
+                           {" "}
+              <label htmlFor="contactEmail">General Inquiries Email</label>     
+                     {" "}
               {isEditing ? (
                 <input
                   id="contactEmail"
@@ -378,9 +385,13 @@ const HospitalProfile = () => {
                   {formData.contactEmail || "N/A"}
                 </p>
               )}
+                         {" "}
             </div>
+                       {" "}
             <div className="form-group grid-span-2">
-              <label htmlFor="websiteUrl">Official Website URL</label>
+                           {" "}
+              <label htmlFor="websiteUrl">Official Website URL</label>         
+                 {" "}
               {isEditing ? (
                 <input
                   id="websiteUrl"
@@ -404,15 +415,18 @@ const HospitalProfile = () => {
                   )}
                 </p>
               )}
+                         {" "}
             </div>
+                     {" "}
           </div>
+                 {" "}
         </div>
-
-        {/* About Card */}
+               {" "}
         <div className="profile-card">
-          <h4>About the Hospital</h4>
+                    <h4>About the Hospital</h4>         {" "}
           <div className="form-group">
-            <label htmlFor="about">Hospital Description</label>
+                        <label htmlFor="about">Hospital Description</label>     
+                 {" "}
             {isEditing ? (
               <textarea
                 id="about"
@@ -424,15 +438,20 @@ const HospitalProfile = () => {
             ) : (
               <p className="read-only-field">{formData.about || "N/A"}</p>
             )}
+                     {" "}
           </div>
+                 {" "}
         </div>
-
+               {" "}
         <div className="profile-card">
-          <h4>Services Offered</h4>
+                    <h4>Services Offered</h4>         {" "}
           <div className="form-group">
+                       {" "}
             <label htmlFor="serviceInput">Add or remove medical services</label>
+                       {" "}
             {isEditing ? (
               <div className="services-input-container">
+                               {" "}
                 <input
                   id="serviceInput"
                   className="services-input"
@@ -441,6 +460,7 @@ const HospitalProfile = () => {
                   onKeyDown={handleAddService}
                   placeholder="Add a service and press Enter"
                 />
+                             {" "}
               </div>
             ) : (
               <p className="read-only-field">
@@ -449,7 +469,9 @@ const HospitalProfile = () => {
                   : "No services listed"}
               </p>
             )}
+                       {" "}
             <div className="services-tags-display">
+                           {" "}
               {isEditing &&
                 formData.services.map((service, index) => (
                   <span key={index} className="service-tag-item">
@@ -465,7 +487,6 @@ const HospitalProfile = () => {
             </div>
           </div>
         </div>
-
         {isEditing && (
           <div className="profile-actions">
             <button type="button" className="cancel-btn" onClick={handleCancel}>
@@ -473,7 +494,7 @@ const HospitalProfile = () => {
             </button>
             <button type="submit" className="save-btn">
               Save Changes
-            </button>
+            </button>{" "}
           </div>
         )}
       </form>

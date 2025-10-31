@@ -20,6 +20,7 @@ import HospitalProfile from "./pages/HospitalProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageDoctors from "./pages/ManageDoctors";
 import HospitalAppointment from "./pages/HospitalAppointment";
+import HospitalSettings from "./pages/HospitalSettings";
 
 function App() {
   return (
@@ -122,16 +123,16 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-           path="/hospital-settings" // Admin's user settings
-           element={
-             <ProtectedRoute allowedRoles={['HOSPITAL']}>
-               <HospitalDashboardLayout>
-                 <PatientSettings /> // Can potentially reuse PatientSettings page? Or create HospitalAdminSettings
-               </HospitalDashboardLayout>
-             </ProtectedRoute>
-           }
-         /> */}
+        <Route
+          path="/hospital-settings"
+          element={
+            <ProtectedRoute allowedRoles={["HOSPITAL"]}>
+              <HospitalDashboardLayout>
+                <HospitalSettings />
+              </HospitalDashboardLayout>
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />
     </>

@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // remove useLocation
 
 const AuthContext = createContext(null);
 const apiURL = import.meta.env.VITE_BACKEND_API_URL;
@@ -15,8 +15,16 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
 
+  // Define logout first, wrapped in useCallback
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setUser(null);
+    navigate("/sign-in");
+  }, [navigate]);
+
+  // Define fetchUser, which can safely depend on logout
   const fetchUser = useCallback(
     async (currentToken) => {
       if (currentToken) {
@@ -28,55 +36,27 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
             setUser(data);
           } else {
-            logout(); // Use the logout function which clears state and storage
+            logout(); // Token is invalid or expired
           }
         } catch (error) {
-          console.error("AuthContext: Failed to fetch user:", error); // Log 5
+          console.error("AuthContext: Failed to fetch user:", error);
           logout(); // Logout on error
         }
-      } else {
-        console.log("AuthContext: No token found."); // Log 6
       }
       setLoading(false);
     },
-    [navigate]
+    [logout] // Depends on the stable logout function
   );
 
+  // This effect runs on initial load to check for an existing session
   useEffect(() => {
     fetchUser(token);
   }, [token, fetchUser]);
 
-  useEffect(() => {
-    if (user) {
-      const isOnPatientPage = location.pathname.startsWith("/patient-");
-      const isOnHospitalPage = location.pathname.startsWith("/hospital-");
-      const isAuthPage =
-        location.pathname === "/sign-in" || location.pathname === "/";
-
-      if (user.role === "PATIENT" && !isOnPatientPage) {
-        navigate("/patient-dashboard");
-      } else if (user.role === "HOSPITAL" && !isOnHospitalPage) {
-        navigate("/hospital-dashboard");
-      } else if (isAuthPage) {
-        const dashboard =
-          user.role === "HOSPITAL"
-            ? "/hospital-dashboard"
-            : "/patient-dashboard";
-        navigate(dashboard);
-      }
-    }
-  }, [user, navigate, location]);
-
+  // Login just sets the token. The fetchUser effect will handle the rest.
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUser(null);
-    navigate("/sign-in");
   };
 
   const refetchUser = useCallback(async () => {
@@ -91,6 +71,7 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 export const useAuth = () => {
   return useContext(AuthContext);
 };

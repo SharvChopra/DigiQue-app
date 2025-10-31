@@ -34,7 +34,7 @@ router.get("/me", authMiddleware, async (req, res) => {
   try {
     const appointments = await Appointment.find({ patient: req.user.id })
       .populate("doctor", "name specialty")
-      .populate("Hospital", "name address")
+      .populate("hospital", "name address")
       .sort({ date: -1 });
 
     console.log(

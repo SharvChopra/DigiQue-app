@@ -3,6 +3,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User.js");
 const Hospital = require("../models/Hospital.js");
+const { body, validationResult } = require("express-validator");
+const authMiddleware = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -102,5 +104,51 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
+//Change Password Route
+router.post(
+  "/change-password",
+  [
+    authMiddleware,
+    body("currentPassword", "Current password is required").not().isEmpty(),
+    body("newPassword", "New password must be at least 6 characters").isLength({
+      min: 6,
+    }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id; // From authMiddleware
+
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ msg: "User not found" });
+      }
+
+      // 2. Check if the current password is correct
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ msg: "Invalid current password" });
+      }
+
+      // 3. Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+      user.password = newPasswordHash;
+      await user.save();
+
+      res.status(200).json({ msg: "Password updated successfully" });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server Error");
+    }
+  }
+);
 
 module.exports = router;
