@@ -1,0 +1,34 @@
+.appointment-actions {
+  display: flex;
+  gap: 8px;
+}
+.action-btn {
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.action-btn.complete {
+  background-color: #d1e7dd;
+  color: #157347;
+  border-color: #badbcc;
+}
+.action-btn.complete:hover {
+  background-color: #badbcc;
+}
+.action-btn.cancel {
+  background-color: #f8d7da;
+  color: #dc3545;
+  border-color: #f5c2c7;
+}
+.action-btn.cancel:hover {
+  background-color: #f5c2c7;
+}
+.action-btn.reschedule {
+  background-color: #cff4fc;
+  color: #0dcaf0;
+  border-color: #b6effb;
+}

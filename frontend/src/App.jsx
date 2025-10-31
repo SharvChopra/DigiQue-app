@@ -12,13 +12,14 @@ import MyAppointments from "./pages/MyAppointments";
 import HelpFeedback from "./pages/HelpFeedback";
 import PatientSettings from "./pages/PatientSettings";
 import HospitalDashboard from "./pages/HospitalDashboard"; // Placeholder from before
-// Add imports for new hospital pages: HospitalAppointments, ManageDoctors, HospitalProfile, HospitalFeedback, HospitalAdminSettings
+// Add imports for new hospital pages: HospitalFeedback, HospitalAdminSettings
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HospitalProfile from "./pages/HospitalProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ManageDoctors from "./pages/ManageDoctors";
+import HospitalAppointment from "./pages/HospitalAppointment";
 
 function App() {
   return (
@@ -87,6 +88,16 @@ function App() {
                 {" "}
                 {/* Use Hospital Layout */}
                 <HospitalDashboard /> {/* Overview Page */}
+              </HospitalDashboardLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/hospital-appointments"
+          element={
+            <ProtectedRoute allowedRoles={["HOSPITAL"]}>
+              <HospitalDashboardLayout>
+                <HospitalAppointment />
               </HospitalDashboardLayout>
             </ProtectedRoute>
           }

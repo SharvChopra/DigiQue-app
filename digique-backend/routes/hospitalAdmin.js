@@ -240,7 +240,7 @@ router.put(
   hospitalAdminAuth,
   async (req, res) => {
     const newSchedule = req.body.schedule;
-    const hospitalId = req.hospitalId; 
+    const hospitalId = req.hospitalId;
 
     if (!newSchedule || typeof newSchedule !== "object") {
       return res.status(400).json({ msg: "Invalid schedule data provided." });
@@ -268,5 +268,76 @@ router.put(
 );
 
 //Fetching the Appointments in the Admin Dashboard
+router.get("/my-appointments", hospitalAdminAuth, async (req, res) => {
+  try {
+    const hospitalId = req.hospitalId;
+    const filter = { hospital: hospitalId };
 
+    if (req.query.date) {
+      const startDate = new Date(req.query.date);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(req.query.date);
+      endDate.setHours(23, 59, 59, 999);
+      filter.date = { $gte: startDate, $lte: endDate };
+    }
+
+    if (req.query.doctorId) {
+      filter.doctor = req.query.doctorId;
+    }
+
+    if (req.query.status) {
+      filter.status = req.query.status;
+    }
+
+    const appointments = await Appointment.find(filter)
+      .populate("patient", "firstName lastName email")
+      .populate("doctor", "name specialty")
+      .sort({ date: 1, time: 1 });
+
+    res.json(appointments);
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    res.status(500).send("Server Error");
+  }
+});
+
+// Router to update appointment status
+router.put(
+  "/appointments/:appointmentId/status",
+  hospitalAdminAuth,
+  async (req, res) => {
+    const { status } = req.body;
+    const { appointmentId } = req.params;
+    const hospitalId = req.hospitalId;
+
+    if (!status || !["Completed", "Cancelled"].includes(status)) {
+      return res.status(400).json({ msg: "Invalid status provided." });
+    }
+
+    try {
+      let appointment = await Appointment.findById(appointmentId);
+
+      if (!appointment) {
+        return res.status(404).json({ msg: "Appointment not found" });
+      }
+
+      if (appointment.hospital.toString() !== hospitalId.toString()) {
+        // Corrected comparison
+        return res.status(403).json({ msg: "Unauthorized" });
+      }
+
+      appointment.status = status;
+      await appointment.save();
+
+      const updatedAppointment = await Appointment.findById(appointmentId)
+        .populate("patient", "firstName lastName email phoneNumber")
+        .populate("doctor", "name specialty");
+
+      res.json(updatedAppointment);
+    } catch (error) {
+      console.error("Error updating appointment status:", error);
+      res.status(500).send("Server Error");
+    }
+  }
+);
 module.exports = router;
