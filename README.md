@@ -51,18 +51,6 @@ This application is split into two main portals, each with its own set of featur
 
 ---
 
-## 📸 Screenshots
-
-Here are a few snapshots of the application in action.
-
-| Patient - Hospital Details | Patient - My Appointments | Admin - Manage Doctors |
-| :---: | :---: | :---: |
-|  |  |  |
-| **Admin - Edit Schedule** | **Admin - Manage Appointments** | **Admin - Hospital Profile** |
-|  |  |  |
-
----
-
 ## 🛠️ Technology Stack
 
 ### Frontend
