@@ -45,41 +45,36 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.json(appointments);
   } catch (err) {
     console.error(err.message);
-    console.error("Error fetching /me appointments:", err.message); // Log the specific error
+    console.error("Error fetching /me appointments:", err.message);
     res.status(500).send("Server Error");
   }
 });
 
 router.put("/:id", authMiddleware, async (req, res) => {
   try {
-    const { date, time, status } = req.body; // New date/time for reschedule OR new status for cancel
+    const { date, time, status } = req.body;
 
-    // Find the appointment by ID
     let appointment = await Appointment.findById(req.params.id);
 
     if (!appointment) {
       return res.status(404).json({ msg: "Appointment not found" });
     }
 
-    // Check if the logged-in user is the owner of the appointment
     if (appointment.patient.toString() !== req.user.id) {
       return res.status(401).json({ msg: "User not authorized" });
     }
-
-    // --- Update Logic ---
     const updates = {};
     if (date) updates.date = date;
     if (time) updates.time = time;
-    if (status) updates.status = status; // e.g., "Cancelled"
+    if (status) updates.status = status;
 
-    // Perform the update
     appointment = await Appointment.findByIdAndUpdate(
       req.params.id,
       { $set: updates },
-      { new: true } // Return the updated document
+      { new: true }
     );
 
-    res.json(appointment); // Send back the updated appointment
+    res.json(appointment);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");

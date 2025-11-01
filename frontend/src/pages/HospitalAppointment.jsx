@@ -77,7 +77,7 @@ export default function HospitalAppointments() {
   }, [fetchDoctors]);
 
   useEffect(() => {
-    fetchAppointments(); // Fetch appointments on load and when filters change
+    fetchAppointments();
   }, [fetchAppointments]);
 
   const handleUpdateStatus = async (appointmentId, newStatus) => {
@@ -195,7 +195,7 @@ export default function HospitalAppointments() {
                   <th>Date</th>
                   <th>Time</th>
                   <th>Status</th>
-                  <th>Actions</th> {/* <-- Actions Header */}
+                  <th>Actions</th> 
                 </tr>
               </thead>
               <tbody>

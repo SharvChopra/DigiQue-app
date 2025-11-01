@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import "./HospitalAdmin.css";
 
 const HospitalProfile = () => {
-  const { token } = useAuth(); // Removed refetchUser, not needed here
+  const { token } = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     street: "",
@@ -13,8 +13,8 @@ const HospitalProfile = () => {
     state: "",
     zipCode: "",
     location: "",
-    bannerImage: "", // URL for the wide banner
-    logoUrl: "", // URL for the square logo
+    bannerImage: "",
+    logoUrl: "",
     contactPhone: "",
     contactEmail: "",
     websiteUrl: "",
@@ -25,7 +25,7 @@ const HospitalProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [serviceInput, setServiceInput] = useState("");
-  const [isEditing, setIsEditing] = useState(false); // We no longer need 'selectedBannerFile'
+  const [isEditing, setIsEditing] = useState(false);
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
   const fetchProfile = useCallback(async () => {
@@ -36,7 +36,7 @@ const HospitalProfile = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error("Failed to fetch hospital profile");
-      const data = await response.json(); // Simplified address parsing (assuming you'll fill it out properly now)
+      const data = await response.json();
 
       const addressParts = (data.address || ",,,").split(",");
       const initialFormData = {
@@ -46,8 +46,8 @@ const HospitalProfile = () => {
         state: addressParts[2]?.trim() || "",
         zipCode: addressParts[3]?.trim() || "",
         location: data.location || addressParts[1]?.trim() || "",
-        bannerImage: data.bannerImage || "", // Explicitly load bannerImage
-        logoUrl: data.logoUrl || "", // Explicitly load logoUrl
+        bannerImage: data.bannerImage || "",
+        logoUrl: data.logoUrl || "",
         contactPhone: data.contactPhone || "",
         contactEmail: data.contactEmail || "",
         websiteUrl: data.websiteUrl || "",
@@ -70,7 +70,7 @@ const HospitalProfile = () => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  }; // --- NO CHANGE to service handlers ---
+  };
 
   const handleServiceInputChange = (e) => {
     setServiceInput(e.target.value);
@@ -93,7 +93,7 @@ const HospitalProfile = () => {
       ...prev,
       services: prev.services.filter((s) => s !== serviceToRemove),
     }));
-  }; // --- END of service handlers ---
+  };
   const handleCancel = () => {
     if (originalData) {
       setFormData(originalData);
@@ -102,20 +102,20 @@ const HospitalProfile = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // --- REMOVED: All file upload logic ---
+    e.preventDefault();
 
     try {
       const fullAddress =
         `${formData.street}, ${formData.city}, ${formData.state}, ${formData.zipCode}`
-          .replace(/ ,|, $/g, "") // Clean up trailing/empty commas
+          .replace(/ ,|, $/g, "")
           .trim();
 
       const payload = {
         name: formData.name,
         address: fullAddress,
         location: formData.city || formData.location,
-        bannerImage: formData.bannerImage, // Send the URL string
-        logoUrl: formData.logoUrl, // Send the URL string
+        bannerImage: formData.bannerImage,
+        logoUrl: formData.logoUrl,
         contactPhone: formData.contactPhone,
         contactEmail: formData.contactEmail,
         websiteUrl: formData.websiteUrl,
@@ -137,11 +137,11 @@ const HospitalProfile = () => {
         throw new Error(errorData.msg || "Failed to update profile");
       }
 
-      const updatedData = await response.json(); // Update local state to match the saved data
+      const updatedData = await response.json();
 
       const savedData = {
         ...formData,
-        address: fullAddress, // This isn't returned, so we use the payload
+        address: fullAddress,
         location: payload.location,
       };
       setFormData(savedData);
@@ -152,11 +152,10 @@ const HospitalProfile = () => {
     } catch (err) {
       toast.error(err.message || "Update failed.");
     }
-  }; // --- REMOVED: handleFileChange ---
+  };
 
   return (
     <div className="hospital-profile-page">
-            {/* ... (no change to header) ... */}     {" "}
       <div className="page-header">
                 <h2 className="page-title">Hospital Profile</h2>       {" "}
         {!isEditing && (
@@ -179,7 +178,6 @@ const HospitalProfile = () => {
         <div className="profile-card">
                     <h4>Basic Information</h4>         {" "}
           <div className="profile-form-grid">
-                        {/* ... (no change to name) ... */}           {" "}
             <div className="form-group grid-span-2">
                             <label htmlFor="name">Hospital Name</label>         
                  {" "}
@@ -196,13 +194,10 @@ const HospitalProfile = () => {
               )}
                          {" "}
             </div>
-                        {/* --- UPDATED IMAGE SECTION --- */}           {" "}
             <div className="form-group grid-span-2">
-                           {" "}
               <label htmlFor="bannerImage">
                 Hospital Banner URL (Wide Image)
               </label>
-                           {" "}
               {isEditing ? (
                 <input
                   type="text"
@@ -217,7 +212,6 @@ const HospitalProfile = () => {
                   {formData.bannerImage || "N/A"}
                 </p>
               )}
-                           {" "}
               {formData.bannerImage && (
                 <img
                   src={formData.bannerImage}
@@ -229,7 +223,7 @@ const HospitalProfile = () => {
                     maxHeight: "200px",
                     objectFit: "cover",
                   }}
-                  onError={(e) => (e.target.style.display = "none")} // Hide if URL is broken
+                  onError={(e) => (e.target.style.display = "none")}
                   onLoad={(e) => (e.target.style.display = "block")}
                 />
               )}
@@ -237,7 +231,6 @@ const HospitalProfile = () => {
             </div>
                        {" "}
             <div className="form-group grid-span-2">
-                           {" "}
               <label htmlFor="logoUrl">Hospital Logo URL (Square Image)</label> 
                        {" "}
               {isEditing ? (
@@ -252,7 +245,6 @@ const HospitalProfile = () => {
               ) : (
                 <p className="read-only-field">{formData.logoUrl || "N/A"}</p>
               )}
-                           {" "}
               {formData.logoUrl && (
                 <img
                   src={formData.logoUrl}
@@ -263,16 +255,14 @@ const HospitalProfile = () => {
                     height: "100px",
                     objectFit: "contain",
                   }}
-                  onError={(e) => (e.target.style.display = "none")} // Hide if URL is broken
+                  onError={(e) => (e.target.style.display = "none")}
                   onLoad={(e) => (e.target.style.display = "block")}
                 />
               )}
                          {" "}
             </div>
-                        {/* --- END OF UPDATED SECTION --- */}           {" "}
             <div className="form-group grid-span-2">
-                            <label htmlFor="street">Street Address</label>     
-                     {" "}
+               <label htmlFor="street">Street Address</label>
               {isEditing ? (
                 <input
                   id="street"
@@ -288,7 +278,7 @@ const HospitalProfile = () => {
             </div>
                        {" "}
             <div className="form-group">
-                            <label htmlFor="city">City</label>             {" "}
+                            <label htmlFor="city">City</label>
               {isEditing ? (
                 <input
                   id="city"
@@ -340,17 +330,11 @@ const HospitalProfile = () => {
           </div>
                  {" "}
         </div>
-               {" "}
-        {/* ... (no change to Contact, About, Services, or Action buttons) ... */}
-               {" "}
         <div className="profile-card">
                     <h4>Contact Details</h4>         {" "}
           <div className="profile-form-grid">
-                       {" "}
             <div className="form-group">
-                           {" "}
               <label htmlFor="contactPhone">Main Phone Number</label>           
-               {" "}
               {isEditing ? (
                 <input
                   id="contactPhone"
@@ -368,7 +352,6 @@ const HospitalProfile = () => {
             </div>
                        {" "}
             <div className="form-group">
-                           {" "}
               <label htmlFor="contactEmail">General Inquiries Email</label>     
                      {" "}
               {isEditing ? (
@@ -389,7 +372,6 @@ const HospitalProfile = () => {
             </div>
                        {" "}
             <div className="form-group grid-span-2">
-                           {" "}
               <label htmlFor="websiteUrl">Official Website URL</label>         
                  {" "}
               {isEditing ? (
@@ -451,7 +433,7 @@ const HospitalProfile = () => {
                        {" "}
             {isEditing ? (
               <div className="services-input-container">
-                               {" "}
+                 
                 <input
                   id="serviceInput"
                   className="services-input"
@@ -460,7 +442,6 @@ const HospitalProfile = () => {
                   onKeyDown={handleAddService}
                   placeholder="Add a service and press Enter"
                 />
-                             {" "}
               </div>
             ) : (
               <p className="read-only-field">
@@ -471,7 +452,6 @@ const HospitalProfile = () => {
             )}
                        {" "}
             <div className="services-tags-display">
-                           {" "}
               {isEditing &&
                 formData.services.map((service, index) => (
                   <span key={index} className="service-tag-item">

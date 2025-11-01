@@ -16,7 +16,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Define logout first, wrapped in useCallback
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     setToken(null);
@@ -24,7 +23,6 @@ export const AuthProvider = ({ children }) => {
     navigate("/sign-in");
   }, [navigate]);
 
-  // Define fetchUser, which can safely depend on logout
   const fetchUser = useCallback(
     async (currentToken) => {
       if (currentToken) {
@@ -36,7 +34,7 @@ export const AuthProvider = ({ children }) => {
             const data = await response.json();
             setUser(data);
           } else {
-            logout(); // Token is invalid or expired
+            logout();
           }
         } catch (error) {
           console.error("AuthContext: Failed to fetch user:", error);
@@ -45,15 +43,13 @@ export const AuthProvider = ({ children }) => {
       }
       setLoading(false);
     },
-    [logout] // Depends on the stable logout function
+    [logout] 
   );
 
-  // This effect runs on initial load to check for an existing session
   useEffect(() => {
     fetchUser(token);
   }, [token, fetchUser]);
 
-  // Login just sets the token. The fetchUser effect will handle the rest.
   const login = (newToken) => {
     localStorage.setItem("token", newToken);
     setToken(newToken);

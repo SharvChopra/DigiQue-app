@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
 import "./BookingModal.css";
-import "../pages/HospitalAdmin.css"; // Shared styles for hospital admin
+import "../pages/HospitalAdmin.css";
 
 const AddEditDoctorModal = ({ isOpen, onClose, onSaveSuccess, doctor }) => {
   const { token } = useAuth();
@@ -36,7 +36,7 @@ const AddEditDoctorModal = ({ isOpen, onClose, onSaveSuccess, doctor }) => {
 
     const doctorData = { name, speciality, profileImage };
     const url = isEditMode
-      ? `${apiURL}/hospital/doctors/${doctor._id}` // PUT to update specific doctor
+      ? `${apiURL}/hospital/doctors/${doctor._id}`
       : `${apiURL}/hospital/my-doctors`;
     const method = isEditMode ? "PUT" : "POST";
     try {
@@ -69,12 +69,10 @@ const AddEditDoctorModal = ({ isOpen, onClose, onSaveSuccess, doctor }) => {
   if (!isOpen) return null;
   return (
     <div className="modal-overlay" onClick={onClose}>
-      {/* Prevent closing when clicking inside the modal content */}
       <div
         className="modal-content doctor-modal"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           className="modal-close-button"
           onClick={onClose}
@@ -82,14 +80,11 @@ const AddEditDoctorModal = ({ isOpen, onClose, onSaveSuccess, doctor }) => {
         >
           &times;
         </button>
-        {/* Modal Title */}
         <h3 className="heading">
           {isEditMode ? "Edit Doctor Information" : "Add New Doctor"}
         </h3>
 
-        {/* Form */}
         <form onSubmit={handleSave} className="form-grid">
-          {/* Name Input */}
           <div className="form-group form-main">
             <label htmlFor="docName">Doctor Name</label>
             <input
@@ -101,7 +96,6 @@ const AddEditDoctorModal = ({ isOpen, onClose, onSaveSuccess, doctor }) => {
               disabled={isSaving}
             />
           </div>
-          {/* Specialty Input */}
           <div className="form-group form-main">
             <label htmlFor="docSpecialty">Specialty</label>
             <input

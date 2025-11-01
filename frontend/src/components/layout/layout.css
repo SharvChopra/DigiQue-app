@@ -68,7 +68,7 @@
 .header-right .logout-button {
   background: none;
   border: none;
-  color: #00a79d; /* Matches brand color */
+  color: #00a79d; 
   cursor: pointer;
   font-size: 16px;
   font-weight: 500;
@@ -79,16 +79,16 @@
 }
 
 .header-right .logout-button:hover {
-  background-color: #e6f7f6; /* Light teal hover */
+  background-color: #e6f7f6; 
 }
 
 /* --- Sidebar Styling --- */
 .dashboard-sidebar {
   grid-area: sidebar;
   background-color: #ffffff;
-  padding: 25px 0; /* More top/bottom padding */
+  padding: 25px 0; 
   border-right: 1px solid #e9ecef;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.02); /* Subtle shadow */
+  box-shadow: 2px 0 5px rgba(0,0,0,0.02); 
   display: flex;
   flex-direction: column;
 }
@@ -112,7 +112,7 @@
   margin: 6px 15px; 
   border-radius: 8px;
   transition: background-color 0.2s ease, color 0.2s ease;
-  gap: 12px; /* Space for icons if added */
+  gap: 12px; 
 }
 
 .sidebar-nav li a:hover {
@@ -121,15 +121,15 @@
 }
 
 .sidebar-nav li a.active {
-  background-color: #e6f7f6; /* Light teal background for active */
-  color: #00a79d; /* Brand color for active link */
-  font-weight: 600; /* Bolder for active link */
+  background-color: #e6f7f6; 
+  color: #00a79d; 
+  font-weight: 600;
 }
 
 /* --- Main Content Area --- */
 .dashboard-main-content {
   grid-area: main;
-  overflow-y: auto; /* Allows content to scroll */
-  padding: 30px; /* Consistent padding */
-  background-color: #f0f2f5; /* Light background for consistency */
+  overflow-y: auto;
+  padding: 30px; 
+  background-color: #f0f2f5; 
 }

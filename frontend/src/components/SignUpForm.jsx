@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-// import "./SignUpForm.css";
 
 export default function SignUpForm({ className }) {
   const [formData, setFormData] = useState({
@@ -15,12 +14,10 @@ export default function SignUpForm({ className }) {
 
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
 
-  // This single function handles all text input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  // This handles the dropdown change
   const handleRoleChange = (e) => {
     setFormData({ ...formData, role: e.target.value });
   };
@@ -41,7 +38,6 @@ export default function SignUpForm({ className }) {
       }
 
       toast.success("Account created! Please sign in.");
-      // Optional: Clear the form after successful submission
       setFormData({
         firstName: "",
         lastName: "",
@@ -60,10 +56,9 @@ export default function SignUpForm({ className }) {
     <form onSubmit={handleSubmit} className={className}>
       <h3>Create an Account</h3>
 
-      {/* Each input now uses the formData object and the handleChange function */}
       <div className="input-group">
         <input
-          id="firstName" // The 'id' must match the key in the formData state
+          id="firstName" 
           type="text"
           value={formData.firstName}
           onChange={handleChange}

@@ -26,7 +26,6 @@ export default function AuthPage() {
         </div>
 
         <div className="forms-wrapper">
-          {/* We now pass the animation classes down as a prop */}
           <SignUpForm
             className={`auth-form ${isSigningUp ? "active" : "inactive"}`}
           />

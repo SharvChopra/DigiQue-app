@@ -105,7 +105,6 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//Change Password Route
 router.post(
   "/change-password",
   [
@@ -130,13 +129,11 @@ router.post(
         return res.status(404).json({ msg: "User not found" });
       }
 
-      // 2. Check if the current password is correct
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
         return res.status(400).json({ msg: "Invalid current password" });
       }
 
-      // 3. Hash the new password
       const salt = await bcrypt.genSalt(10);
       const newPasswordHash = await bcrypt.hash(newPassword, salt);
 

@@ -30,7 +30,6 @@ const AdminProfile = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Reset form to original user data
   const handleCancel = () => {
     setIsEditing(false);
     if (user) {
@@ -53,11 +52,11 @@ const AdminProfile = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData), // Sends only the 4 fields
+        body: JSON.stringify(formData), 
       });
       if (!res.ok) throw new Error("Failed to update profile");
 
-      await refetchUser(); // Refresh user context
+      await refetchUser(); 
       toast.success("Profile Updated Successfully");
       setIsEditing(false);
     } catch (err) {

@@ -89,23 +89,22 @@
 
 .feedback-section {
   background-color: #ffffff;
-  padding: 30px; /* Increased padding */
+  padding: 30px; 
   border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07); /* Softer shadow */
-  border: 1px solid #e9ecef; /* Subtle border */
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.07); 
+  border: 1px solid #e9ecef; 
 }
 
 .feedback-section h3 {
-  font-size: 19px; /* Slightly larger */
+  font-size: 19px; 
   font-weight: 600;
-  margin: 0 0 25px 0; /* More space below title */
+  margin: 0 0 25px 0; 
   color: #333;
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Feedback Form Styling */
 .feedback-form .form-group {
   margin-bottom: 20px;
 }
@@ -121,16 +120,15 @@
 .feedback-form input,
 .feedback-form textarea,
 .feedback-form select {
-  /* Apply styles consistently */
   width: 100%;
-  padding: 12px 15px; /* Consistent padding */
-  border: 1px solid #dce1e7; /* Softer border color */
+  padding: 12px 15px; 
+  border: 1px solid #dce1e7; 
   border-radius: 8px;
   font-size: 15px;
-  background-color: #fcfdff; /* Very light background */
+  background-color: #fcfdff; 
   color: #333;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Add transition for hover */
-  -webkit-appearance: none; /* Remove default styling */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; 
+  -webkit-appearance: none; 
   -moz-appearance: none;
   appearance: none;
 }
@@ -139,7 +137,7 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E"); /* Custom arrow */
   background-repeat: no-repeat;
   background-position: right 15px center;
-  padding-right: 40px; /* Make space for custom arrow */
+  padding-right: 40px; 
 }
 
 .feedback-form input:hover,
@@ -152,8 +150,8 @@
 .feedback-form textarea:focus,
 .feedback-form select:focus {
   outline: none;
-  border-color: #007bff; /* Blue border on focus */
-  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15); /* Subtle glow on focus */
+  border-color: #007bff; 
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15); 
 }
 
 .feedback-form textarea {
@@ -161,7 +159,6 @@
   resize: vertical;
 }
 
-/* Submit Button Styling */
 .feedback-form button {
   width: 100%;
   padding: 12px;
@@ -176,22 +173,20 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: background-color 0.2s ease, transform 0.1s ease; /* Add transform transition */
+  transition: background-color 0.2s ease, transform 0.1s ease; 
 }
 
 .feedback-form button:hover {
-  background-color: #00857b; /* Darker shade on hover */
-  transform: translateY(-1px); /* Slight lift effect */
+  background-color: #00857b; 
+  transform: translateY(-1px); 
 }
 
-/* Disabled state for button */
 .feedback-form button:disabled {
-  background-color: #a0d9d6; /* Lighter, muted color when disabled */
+  background-color: #a0d9d6; 
   cursor: not-allowed;
   transform: none; /* No lift effect when disabled */
 }
 
-/* Contact Section Styling */
 .contact-section {
   background-color: #ffffff;
   padding: 25px;

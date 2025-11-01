@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import { useAuth } from "../context/AuthContext";
 import { toast } from "react-toastify";
-import "./BookingModal.css"; // Reuse existing modal styles
+import "./BookingModal.css"; 
 
 export default function RescheduleModal({
   appointment,
@@ -19,7 +19,7 @@ export default function RescheduleModal({
 
   const { token } = useAuth();
   const apiURL = import.meta.env.VITE_BACKEND_API_URL;
-  const doctor = appointment?.doctor; // Get doctor from appointment prop
+  const doctor = appointment?.doctor; 
 
   useEffect(() => {
     if (doctor && selectedDate && isOpen) {
@@ -31,7 +31,6 @@ export default function RescheduleModal({
             `${apiURL}/doctors/${doctor._id}/availability?date=${dateString}`
           );
           const data = await response.json();
-          // Exclude the current appointment's time if it's on the same day
           const filteredTimes = data.filter(
             (time) =>
               !(
@@ -51,7 +50,6 @@ export default function RescheduleModal({
     }
   }, [doctor, selectedDate, isOpen, apiURL, appointment]);
 
-  // Reset date when modal opens with a new appointment
   useEffect(() => {
     if (appointment) {
       setSelectedDate(new Date(appointment.date));
@@ -68,7 +66,7 @@ export default function RescheduleModal({
       const response = await fetch(
         `${apiURL}/appointments/${appointment._id}`,
         {
-          method: "PUT", // Use PUT for update
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -84,7 +82,7 @@ export default function RescheduleModal({
 
       const updatedAppointment = await response.json();
       toast.success(`Appointment rescheduled to ${selectedTime}!`);
-      onRescheduled(updatedAppointment); // Pass updated data back to parent
+      onRescheduled(updatedAppointment); 
       onClose();
     } catch (err) {
       toast.error(err.message);

@@ -16,7 +16,6 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter to allow only images
 const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/;
   const mimetype = filetypes.test(file.mimetype);
@@ -30,14 +29,14 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB limit
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: fileFilter,
 });
 
 router.post(
   "/hospital-logo",
-  hospitalAdminAuth, // Protect this route
-  upload.single("logo"), 
+  hospitalAdminAuth,
+  upload.single("logo"),
   (req, res) => {
     if (!req.file) {
       return res.status(400).json({ msg: "No file uploaded." });

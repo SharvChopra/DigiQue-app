@@ -55,7 +55,7 @@ const ChangePassword = () => {
 
       toast.success("Password updated successfully!");
       clearForm();
-      setIsFormVisible(false); // --- 2. HIDE FORM ON SUCCESS ---
+      setIsFormVisible(false);
     } catch (err) {
       toast.error(err.message);
     } finally {
@@ -79,7 +79,7 @@ const ChangePassword = () => {
         >
           <button
             type="button"
-            className="save-btn" // Use "save-btn" for a primary look
+            className="save-btn" 
             onClick={() => setIsFormVisible(true)}
           >
             Change Password

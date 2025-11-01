@@ -21,7 +21,7 @@ app.use("/api/doctors", require("./routes/doctor"));
 app.use("/api/appointments", require("./routes/appointments.js"));
 app.use("/api/feedback", require("./routes/feedback.js"));
 app.use("/api/hospital", require("./routes/hospitalAdmin.js"));
-app.use("/api/upload", uploadRoutes); // <-- Use it
+app.use("/api/upload", uploadRoutes); 
 
 mongoose
   .connect(process.env.MONGODB_URI)
